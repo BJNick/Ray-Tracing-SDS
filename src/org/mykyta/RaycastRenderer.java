@@ -1,8 +1,5 @@
 package org.mykyta;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RaycastRenderer {
 
     private Iterable<VisibleObject> visibleObjects;
@@ -17,11 +14,14 @@ public class RaycastRenderer {
         this.width = width;
         this.height = height;
         this.fieldOfView = fieldOfView;
-        cameraPos = new Vector3(0,0,-10);
+        cameraPos = new Vector3(0, 0, -10);
     }
 
     public int getPixel(int u, int v) {
-        // TODO implement raycast
+        Vector3 relRay = createRay(u, v);
+        RaycastHit hit = traceRay(relRay);
+        if (hit != null)
+            return hit.albedo;
         return 0x000000;
     }
 
@@ -33,26 +33,25 @@ public class RaycastRenderer {
         return new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist);
     }
 
-    public int traceRay(Vector3 relRay) {
-        List<CastIntersection> intersections = new ArrayList<>();
+    public RaycastHit traceRay(Vector3 relRay) {
+        RaycastHit closestHit = null;
         for (VisibleObject vo : visibleObjects) {
-            vo.checkRayCollision(relRay, cameraPos);
+            RaycastHit latestHit = vo.checkRayCollision(relRay, cameraPos);
+            if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
+                closestHit = latestHit;
+            }
         }
-        return 0x000000;
+        return closestHit;
     }
 }
 
-class CastIntersection implements Comparable<CastIntersection> {
+class RaycastHit {
     public float depth;
     public Vector3 position;
     public Vector3 normal;
-
-    @Override
-    public int compareTo(CastIntersection o) {
-        return depth > o.depth ? 1 : -1;
-    }
+    public int albedo;
 }
 
 interface VisibleObject {
-    CastIntersection checkRayCollision(Vector3 relRay, Vector3 origin);
+    RaycastHit checkRayCollision(Vector3 relRay, Vector3 origin);
 }
