@@ -23,7 +23,7 @@ public class RaycastRenderer {
 
     public int getPixel(int u, int v) {
         Vector3 relRay = createRay(u, v);
-        RaycastHit hit = traceRay(relRay);
+        RaycastHit hit = traceRay(cameraPos, relRay);
         if (hit != null)
             return hit.albedo;
         return 0x000000;
@@ -37,10 +37,10 @@ public class RaycastRenderer {
         return new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist);
     }
 
-    public RaycastHit traceRay(Vector3 relRay) {
+    public RaycastHit traceRay(Vector3 origin, Vector3 relRay) {
         RaycastHit closestHit = null;
         for (VisibleObject vo : visibleObjects) {
-            RaycastHit latestHit = vo.checkRayCollision(relRay, cameraPos);
+            RaycastHit latestHit = vo.checkRayCollision(relRay, origin);
             if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
                 closestHit = latestHit;
             }
