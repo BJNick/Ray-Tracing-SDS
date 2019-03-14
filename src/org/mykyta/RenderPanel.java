@@ -5,10 +5,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+/*
+ * Separate from RaycastRenderer, this class makes sure to fit the image in a window on the screen.
+ */
+
 class RenderPanel extends JPanel {
 
     private BufferedImage bufferedImage;
-    private int W, H;
+    public final int W, H;
     private AffineTransform transform;
 
     public RenderPanel(int width, int height, int scale) {
@@ -21,10 +25,13 @@ class RenderPanel extends JPanel {
         transform =  AffineTransform.getScaleInstance(scale, scale);
     }
 
-    public void drawView() {
-        bufferedImage.setRGB(0, 0, 0xffff00);
-        bufferedImage.setRGB(W-1, H-1, 0xff00ff);
-        // bufferedImage.setRGB(0,0,2,2, new int[] {0x00ff00, 0xffff00, 0xff0000, 0xff00ff}, 0, 2);
+    public void drawView(RaycastRenderer renderer) {
+        for (int i = 0; i < W; i++) {
+            for (int j = 0; j < H; j++) {
+                bufferedImage.setRGB(i, j, renderer.getPixel(i, j));
+                repaint();
+            }
+        }
     }
 
     @Override

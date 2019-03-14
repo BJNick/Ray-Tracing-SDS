@@ -1,5 +1,9 @@
 package org.mykyta;
 
+/*
+ * This class is a representation of a 3D vector [x, y, z], it is required to store information about position of objects and direction of rays.
+ */
+
 public class Vector3 {
 
     public static Vector3 ZERO = new Vector3(0, 0, 0);
@@ -19,4 +23,20 @@ public class Vector3 {
         return new Vector3(x * c, y * c, z * c);
     }
 
+    public Vector3 add(Vector3 v) {
+        return new Vector3(x + v.x, y + v.y, z + v.z);
+    }
+
+    public float mag() {
+        return (float) Math.sqrt(x * x + y * y + z * z);
+    }
+
+    @Override
+    public String toString() {
+        return "[" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ']';
+    }
 }
