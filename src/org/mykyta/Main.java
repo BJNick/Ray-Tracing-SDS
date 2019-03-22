@@ -27,9 +27,9 @@ public class Main {
             @Override
             public RaycastHit checkRayCollision(Vector3 relRay, Vector3 origin) {
                 float c = (0 - origin.z) / relRay.z;
-                if (origin.add(relRay.times(c)).y > 0 && origin.add(relRay.times(c)).y < 1)
-                    return new RaycastHit(relRay.times(c).mag(),
-                            origin.add(relRay.times(c)),
+                if (origin.add(relRay.scale(c)).y > 0 && origin.add(relRay.scale(c)).y < 1)
+                    return new RaycastHit(relRay.scale(c).mag(),
+                            origin.add(relRay.scale(c)),
                             new Vector3(0, 0, 1),
                             0x00FF00);
                 return null;

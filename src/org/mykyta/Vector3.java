@@ -13,24 +13,29 @@ public class Vector3 {
 
     public final float x, y, z;
 
+    // This method is used to create a Vector3 from three x/y/z components.
     public Vector3(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Vector3 times(float c) {
+    // Multiply by a constant
+    public Vector3 scale(float c) {
         return new Vector3(x * c, y * c, z * c);
     }
 
+    // Add to another vector
     public Vector3 add(Vector3 v) {
         return new Vector3(x + v.x, y + v.y, z + v.z);
     }
 
+    // Find the magnitude (using Pythagorean Theorem)
     public float mag() {
         return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
+    // Print out the vector in [x, y, z] format
     @Override
     public String toString() {
         return "[" +
