@@ -32,8 +32,44 @@ public class Vector3 {
 
     // Find the magnitude (using Pythagorean Theorem)
     public float mag() {
-        return (float) Math.sqrt(x * x + y * y + z * z);
+        return (float) Math.sqrt(sqrMag());
     }
+
+    // Get a normalized vector (with a magnitude of 1)
+    public Vector3 normalized() {
+        return scale(1f / mag());
+    }
+
+    // Find the squared magnitude (faster, as square roots are longer to compute)
+    public float sqrMag() {
+        return x * x + y * y + z * z;
+    }
+
+    // Subtract another vector
+    public Vector3 sub(Vector3 v) {
+        return add(v.scale(-1));
+    }
+
+    // Dot multiply
+    public float dot(Vector3 v) {
+        return x * v.x + y * v.y + z * v.z;
+    }
+
+    // Cross multiply
+    public Vector3 cross(Vector3 v) {
+        return new Vector3(
+                y * v.z - z * v.y,
+                z * v.x - x * v.z,
+                x * v.y - y * v.x
+            );
+    }
+
+    // Find angle between this and another vector
+    // public float angle(Vector3 v) {}
+
+    // Apply Rodrigues rotation matrix (important for reflection and refraction)
+    // public float rotate(float a, Vector3 v) {}
+
 
     // Print out the vector in [x, y, z] format
     @Override
