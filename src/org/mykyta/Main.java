@@ -1,11 +1,8 @@
 package org.mykyta;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Main {
@@ -23,7 +20,7 @@ public class Main {
         RaycastRenderer raycast = new RaycastRenderer(objects, render.W, render.H, (float) Math.PI / 2);
 
         // Test
-        objects.add(new VisibleObject() {
+        /*objects.add(new VisibleObject() {
             @Override
             public RaycastHit checkRayCollision(Vector3 relRay, Vector3 origin) {
                 float c = (0 - origin.z) / relRay.z;
@@ -32,9 +29,11 @@ public class Main {
                             origin.add(relRay.scale(c)),
                             new Vector3(0, 0, 1),
                             0x00FF00);
-                return null;
             }
-        });
+        });*/
+
+        objects.add(new SphericalObject(new Vector3(0, 0, 0), 1f, 0x3fc9fc));
+        // objects.add(new SphericalObject(new Vector3(0, 0, -10), 5f, 0xf73838));
 
         frame.addKeyListener(new KeyListener() {
             @Override

@@ -29,6 +29,14 @@ public class RaycastRenderer {
         return 0x000000;
     }
 
+    public String getPixelDescription(int u, int v) {
+        Vector3 relRay = createRay(u, v);
+        RaycastHit hit = traceRay(cameraPos, relRay);
+        if (hit != null)
+            return hit.objectID + " " + hit.position + ", " + hit.depth + " deep";
+        return "(no hit)";
+    }
+
     public Vector3 createRay(int u, int v) {
         float relU =  (u / (width - 1f) - 0.5f) * 2;
         float relV =  - (v / (height - 1f) - 0.5f) * 2;
@@ -47,27 +55,4 @@ public class RaycastRenderer {
         }
         return closestHit;
     }
-}
-
-/*
- * Thia class stores basic information about a ray collision in 3D space
- */
-class RaycastHit {
-    public float depth;
-    public Vector3 position;
-    public Vector3 normal;
-    public int albedo;
-    public RaycastHit(float depth, Vector3 position, Vector3 normal, int albedo) {
-        this.depth = depth;
-        this.position = position;
-        this.normal = normal;
-        this.albedo = albedo;
-    }
-}
-
-/*
- * Any child of this class is considered a visible object, which means it interacts with light in some way
- */
-interface VisibleObject {
-    RaycastHit checkRayCollision(Vector3 relRay, Vector3 origin);
 }
