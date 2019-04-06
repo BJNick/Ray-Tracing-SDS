@@ -12,6 +12,7 @@ public class Vector3 {
     public static Vector3 FRONT = new Vector3(0, 0, -1);
 
     public final float x, y, z;
+    private float mag = -1;
 
     // This method is used to create a Vector3 from three x/y/z components.
     public Vector3(float x, float y, float z) {
@@ -32,7 +33,9 @@ public class Vector3 {
 
     // Find the magnitude (using Pythagorean Theorem)
     public float mag() {
-        return (float) Math.sqrt(sqrMag());
+        if (mag == -1)
+            mag = (float) Math.sqrt(sqrMag());
+        return mag;
     }
 
     // Get a normalized vector (with a magnitude of 1)

@@ -18,6 +18,8 @@ class RenderPanel extends JPanel implements MouseListener {
     private AffineTransform transform;
     private RaycastRenderer usedRenderer;
 
+    public boolean printRenderDuration = true;
+
     public RenderPanel(int width, int height, int scale) {
         super();
         bufferedImage = new BufferedImage(width / scale, height / scale, BufferedImage.TYPE_INT_RGB);
@@ -31,12 +33,16 @@ class RenderPanel extends JPanel implements MouseListener {
 
     public void drawView(RaycastRenderer renderer) {
         this.usedRenderer = renderer;
+        long startTime = System.currentTimeMillis();
         for (int i = 0; i < W; i++) {
             for (int j = 0; j < H; j++) {
                 bufferedImage.setRGB(i, j, renderer.getPixel(i, j));
                 repaint();
             }
         }
+        long endTime = System.currentTimeMillis();
+        if (printRenderDuration)
+            System.out.println("Rendered in " + (endTime - startTime) + "ms");
     }
 
     @Override
@@ -48,7 +54,7 @@ class RenderPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
+        System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
         System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight()));
     }
 

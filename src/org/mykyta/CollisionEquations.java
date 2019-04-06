@@ -10,7 +10,7 @@ public class CollisionEquations {
         float dist = q.sub(qi) .mag();
         if (dist > R)
             return null;
-        float x = R*R - dist*dist;
+        float x = (float) Math.sqrt(R*R - dist*dist);
         Vector3 pA = qi.sub( v.scale(x) );
         Vector3 pB = qi.add( v.scale(x) );
         return inside ? pB : pA;

@@ -42,13 +42,13 @@ public class RaycastRenderer {
         float relV =  - (v / (height - 1f) - 0.5f) * 2;
         float planeHalfWidth = (float) Math.tan(fieldOfView / 2) * rasterPlaneDist;
         float planeHalfHeight = height * planeHalfWidth / width;
-        return new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist);
+        return new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist).normalized();
     }
 
     public RaycastHit traceRay(Vector3 origin, Vector3 relRay) {
         RaycastHit closestHit = null;
         for (VisibleObject vo : visibleObjects) {
-            RaycastHit latestHit = vo.checkRayCollision(relRay, origin);
+            RaycastHit latestHit = vo.checkRayCollision(origin, relRay);
             if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
                 closestHit = latestHit;
             }

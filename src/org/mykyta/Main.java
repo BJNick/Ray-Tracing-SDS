@@ -11,13 +11,14 @@ public class Main {
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        RenderPanel render = new RenderPanel(400, 400, 5);
+        RenderPanel render = new RenderPanel(400, 400, 2);
         frame.add(render);
+        frame.setTitle("SDS Ray Tracing Demo by Mykyta");
         frame.pack();
         frame.setVisible(true);
 
         ArrayList<VisibleObject> objects = new ArrayList<>();
-        RaycastRenderer raycast = new RaycastRenderer(objects, render.W, render.H, (float) Math.PI / 2);
+        RaycastRenderer raycast = new RaycastRenderer(objects, render.W, render.H, (float) Math.PI / 4);
 
         // Test
         /*objects.add(new VisibleObject() {
@@ -32,8 +33,9 @@ public class Main {
             }
         });*/
 
-        objects.add(new SphericalObject(new Vector3(0, 0, 0), 1f, 0x3fc9fc));
-        // objects.add(new SphericalObject(new Vector3(0, 0, -10), 5f, 0xf73838));
+        objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc));
+        objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838));
+        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x00ff00));
 
         frame.addKeyListener(new KeyListener() {
             @Override
@@ -47,8 +49,16 @@ public class Main {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, -1));
                     render.drawView(raycast);
                 }
-                if(e.getKeyChar() == 's') {
+                else if(e.getKeyChar() == 's') {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, 1));
+                    render.drawView(raycast);
+                }
+                if(e.getKeyChar() == 'a') {
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(-1, 0, 0));
+                    render.drawView(raycast);
+                }
+                else if(e.getKeyChar() == 'd') {
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(1, 0, 0));
                     render.drawView(raycast);
                 }
             }
