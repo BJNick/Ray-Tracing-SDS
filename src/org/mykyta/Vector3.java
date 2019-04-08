@@ -38,6 +38,12 @@ public class Vector3 {
         return mag;
     }
 
+    // Find the scale factor for this vector based on it's normal vector
+    public float signedScale(Vector3 to) {
+        assert sqrMag() != 0;
+        return to.x != 0 ? (x / to.x) : to.y != 0 ? (y / to.y) : (z / to.z);
+    }
+
     // Get a normalized vector (with a magnitude of 1)
     public Vector3 normalized() {
         return scale(1f / mag());
@@ -68,7 +74,9 @@ public class Vector3 {
     }
 
     // Find angle between this and another vector
-    // public float angle(Vector3 v) {}
+    public float angle(Vector3 v) {
+        return (float) Math.acos(this.dot(v) / (mag() * v.mag()));
+    }
 
     // Apply Rodrigues rotation matrix (important for reflection and refraction)
     // public float rotate(float a, Vector3 v) {}

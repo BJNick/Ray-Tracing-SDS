@@ -28,7 +28,7 @@ public class SphericalObject implements VisibleObject {
         Vector3 hit = CollisionEquations
                 .checkRaySphereCollision(origin, relRay, position, radius, false);
         if (hit != null)
-            return new RaycastHit(hit.sub(origin).x / relRay.x,  // Depth
+            return new RaycastHit(hit.sub(origin).signedScale(relRay),  // Depth
                     hit,  // Position
                     SphericalObject.class.getSimpleName(),
                     hit.sub(position).normalized(),  // Normal
