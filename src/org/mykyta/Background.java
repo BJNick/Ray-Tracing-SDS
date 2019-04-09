@@ -1,14 +1,15 @@
 package org.mykyta;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Background implements VisibleObject {
 
-    private float R = 50;
+    private float R = 500;
     private Vector3 pos = Vector3.ZERO;
-    private float heightSize = 100;
+    private float heightSize = 700;
 
     private BufferedImage texture;
 
@@ -45,7 +46,7 @@ public class Background implements VisibleObject {
                 absCol,
                 Background.class.getSimpleName() + " at " + angleZ,
                 pos.sub(col).normalized(),
-                getPixel(angleZ, absCol.y));
+                new Color(getPixel(angleZ, absCol.y)));
     }
 
     private int getPixel(float angleZ, float height) {
