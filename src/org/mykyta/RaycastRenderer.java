@@ -10,6 +10,7 @@ public class RaycastRenderer {
     private int width, height;
     private float fieldOfView;
     public Vector3 cameraPos;
+    public float cameraAngle = 0;
 
     private final float rasterPlaneDist = 1f;
 
@@ -37,15 +38,21 @@ public class RaycastRenderer {
         return "(no hit)";
     }
 
-    public Vector3 createRay(int u, int v) {
+    private Vector3 createRay(int u, int v) {
         float relU =  (u / (width - 1f) - 0.5f) * 2;
         float relV =  - (v / (height - 1f) - 0.5f) * 2;
         float planeHalfWidth = (float) Math.tan(fieldOfView / 2) * rasterPlaneDist;
         float planeHalfHeight = height * planeHalfWidth / width;
-        return new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist).normalized();
+        Vector3 ret = new Vector3(relU * planeHalfWidth, relV * planeHalfHeight, -rasterPlaneDist).normalized();
+        if (cameraAngle == 0)
+            return ret;
+        else {
+            ret = ret.rotatedY(cameraAngle);
+            return ret;
+        }
     }
 
-    public RaycastHit traceRay(Vector3 origin, Vector3 relRay) {
+    private RaycastHit traceRay(Vector3 origin, Vector3 relRay) {
         RaycastHit closestHit = null;
         for (VisibleObject vo : visibleObjects) {
             RaycastHit latestHit = vo.checkRayCollision(origin, relRay);

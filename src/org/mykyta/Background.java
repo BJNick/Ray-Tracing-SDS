@@ -1,7 +1,6 @@
 package org.mykyta;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -9,8 +8,9 @@ public class Background implements VisibleObject {
 
     private float R = 50;
     private Vector3 pos = Vector3.ZERO;
+    private float heightSize = 100;
 
-    BufferedImage texture = null;
+    private BufferedImage texture;
 
     public Background() {
         texture = new BufferedImage(1558, 300,
@@ -34,15 +34,26 @@ public class Background implements VisibleObject {
         if (col == null)
             return null;
 
-        Vector3 absCol = new Vector3(col.x, origin.y + relRay.y * col.sub(flatOrigin).mag(), col.z);
+        Vector3 absCol = new Vector3(col.x, origin.y + relRay.y * col.sub(flatOrigin).signedScale(relRay), col.z);
 
-        float angleZ = Vector3.FRONT.angle(col.sub(pos)) * ((col.sub(pos).x < 0) ? -1 : 1);
+        float angleZ = (col.sub(pos).x >= 0) ? Vector3.FRONT.angle(col.sub(pos)) : (float) Math.PI * 2 - Vector3.FRONT.angle(col.sub(pos));
+
+        if (Math.abs(absCol.y) > heightSize / 2)
+            return null;
 
         return new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
                 absCol,
                 Background.class.getSimpleName() + " at " + angleZ,
                 pos.sub(col).normalized(),
-                new Color(0, 0,0.5f + Math.min(Math.max(1 * angleZ, -0.5f), 0.5f)).getRGB());
+                getPixel(angleZ, absCol.y));
+    }
+
+    private int getPixel(float angleZ, float height) {
+
+        float fraction = angleZ / ( 2 * (float) Math.PI);
+        float v = Math.max(Math.min(-height / heightSize + 0.5f, 1), 0);
+        return texture.getRGB(Math.round((texture.getWidth()-1) * fraction), Math.round((texture.getHeight()-1) * v));
+
     }
 
 }

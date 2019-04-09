@@ -13,6 +13,7 @@ public class Vector3 {
 
     public final float x, y, z;
     private float mag = -1;
+    private Vector3 normalized;
 
     // This method is used to create a Vector3 from three x/y/z components.
     public Vector3(float x, float y, float z) {
@@ -46,7 +47,9 @@ public class Vector3 {
 
     // Get a normalized vector (with a magnitude of 1)
     public Vector3 normalized() {
-        return scale(1f / mag());
+        if (normalized == null)
+            normalized = scale(1f / mag());
+        return normalized;
     }
 
     // Find the squared magnitude (faster, as square roots are longer to compute)
@@ -71,6 +74,13 @@ public class Vector3 {
                 z * v.x - x * v.z,
                 x * v.y - y * v.x
             );
+    }
+
+    // Rotate by an angle around y axis
+    public Vector3 rotatedY(float angle) {
+        float newX = (float) (x * Math.cos(angle) - z * Math.sin(angle));
+        float newZ = (float) (x * Math.sin(angle) + z * Math.cos(angle));
+        return new Vector3(newX, y, newZ);
     }
 
     // Find angle between this and another vector

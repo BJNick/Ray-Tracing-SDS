@@ -11,7 +11,7 @@ public class Main {
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        RenderPanel render = new RenderPanel(400, 400, 2);
+        RenderPanel render = new RenderPanel(400, 400, 4);
         frame.add(render);
         frame.setTitle("SDS Ray Tracing Demo by Mykyta");
         frame.pack();
@@ -19,19 +19,6 @@ public class Main {
 
         ArrayList<VisibleObject> objects = new ArrayList<>();
         RaycastRenderer raycast = new RaycastRenderer(objects, render.W, render.H, (float) Math.PI / 4);
-
-        // Test
-        /*objects.add(new VisibleObject() {
-            @Override
-            public RaycastHit checkRayCollision(Vector3 relRay, Vector3 origin) {
-                float c = (0 - origin.z) / relRay.z;
-                if (origin.add(relRay.scale(c)).y > 0 && origin.add(relRay.scale(c)).y < 1)
-                    return new RaycastHit(relRay.scale(c).mag(),
-                            origin.add(relRay.scale(c)),
-                            new Vector3(0, 0, 1),
-                            0x00FF00);
-            }
-        });*/
 
         objects.add(new Background());
 
@@ -47,20 +34,28 @@ public class Main {
                 if(e.getKeyChar() == ' ') {
                     render.drawView(raycast);
                 }
-                if(e.getKeyChar() == 'w') {
-                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, -1));
+                else if(e.getKeyChar() == 'w') {
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, -1).rotatedY(raycast.cameraAngle));
                     render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 's') {
-                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, 1));
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, 1).rotatedY(raycast.cameraAngle));
                     render.drawView(raycast);
                 }
-                if(e.getKeyChar() == 'a') {
-                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(-1, 0, 0));
+                else if(e.getKeyChar() == 'a') {
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(-1, 0, 0).rotatedY(raycast.cameraAngle));
                     render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 'd') {
-                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(1, 0, 0));
+                    raycast.cameraPos = raycast.cameraPos.add(new Vector3(1, 0, 0).rotatedY(raycast.cameraAngle));
+                    render.drawView(raycast);
+                }
+                else if(e.getKeyChar() == 'e') {
+                    raycast.cameraAngle += 0.1;
+                    render.drawView(raycast);
+                }
+                else if(e.getKeyChar() == 'q') {
+                    raycast.cameraAngle += -0.1;
                     render.drawView(raycast);
                 }
             }

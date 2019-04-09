@@ -18,7 +18,7 @@ class RenderPanel extends JPanel implements MouseListener {
     private AffineTransform transform;
     private RaycastRenderer usedRenderer;
 
-    public boolean printRenderDuration = true;
+    private boolean printRenderDuration = true;
 
     public RenderPanel(int width, int height, int scale) {
         super();
@@ -53,7 +53,7 @@ class RenderPanel extends JPanel implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
         System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
         System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight()));
     }
@@ -62,7 +62,7 @@ class RenderPanel extends JPanel implements MouseListener {
     public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {}
