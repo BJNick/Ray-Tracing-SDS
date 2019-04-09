@@ -31,6 +31,7 @@ public class SphericalObject implements VisibleObject {
             return new RaycastHit(hit.sub(origin).signedScale(relRay),  // Depth
                     hit,  // Position
                     SphericalObject.class.getSimpleName(),
+                    this,
                     hit.sub(position).normalized(),  // Normal
                     color); // Albedo
         return null;

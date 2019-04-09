@@ -7,6 +7,7 @@ package org.mykyta;
 public class RaycastRenderer {
 
     private Iterable<VisibleObject> visibleObjects;
+    private Iterable<LightSource> lightSources;
     private int width, height;
     private float fieldOfView;
     public Vector3 cameraPos;
@@ -14,8 +15,9 @@ public class RaycastRenderer {
 
     private final float rasterPlaneDist = 1f;
 
-    public RaycastRenderer(Iterable<VisibleObject> visibleObjects, int width, int height, float fieldOfView) {
+    public RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, int width, int height, float fieldOfView) {
         this.visibleObjects = visibleObjects;
+        this.lightSources = lightSources;
         this.width = width;
         this.height = height;
         this.fieldOfView = fieldOfView;
@@ -24,15 +26,15 @@ public class RaycastRenderer {
 
     public int getPixel(int u, int v) {
         Vector3 relRay = createRay(u, v);
-        RaycastHit hit = traceRay(cameraPos, relRay);
-        if (hit != null)
-            return hit.albedo;
+        Illumination illum = traceRayIllumination(cameraPos, relRay);
+        if (illum != null)
+            return illum.toScreenColor();
         return 0x000000;
     }
 
     public String getPixelDescription(int u, int v) {
         Vector3 relRay = createRay(u, v);
-        RaycastHit hit = traceRay(cameraPos, relRay);
+        RaycastHit hit = traceRayHit(cameraPos, relRay);
         if (hit != null)
             return hit.objectID + " " + hit.position + ", " + hit.depth + " deep";
         return "(no hit)";
@@ -52,14 +54,75 @@ public class RaycastRenderer {
         }
     }
 
-    private RaycastHit traceRay(Vector3 origin, Vector3 relRay) {
+    private RaycastHit traceRayHit(Vector3 origin, Vector3 relRay) {
         RaycastHit closestHit = null;
+
         for (VisibleObject vo : visibleObjects) {
             RaycastHit latestHit = vo.checkRayCollision(origin, relRay);
             if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
                 closestHit = latestHit;
             }
         }
+
+        if (closestHit.reflective || closestHit.transparent) {
+            // return traceRayHit();
+            // TODO Reflection & Refraction
+        }
+
         return closestHit;
+    }
+
+    private Illumination getIllumination(RaycastHit point) {
+        Illumination base = Illumination.AMBIENT;
+        for (LightSource ls : lightSources) {
+            if (checkVisibility(ls.point, point.position, point.object)) {
+                // TODO surface illumination
+                base = base.combine(ls.getIlluminationAt(point.position));
+            }
+        }
+        return base;
+    }
+
+    private boolean checkVisibility(Vector3 origin, Vector3 endpoint, VisibleObject exception) {
+        Vector3 dir = endpoint.sub(origin).normalized();
+        for (VisibleObject vo : visibleObjects) {
+            RaycastHit latestHit = vo.checkRayCollision(origin, dir);
+            if (latestHit != null /*&& latestHit.object != exception*/ && latestHit.depth > 0 && latestHit.depth < endpoint.sub(origin).mag()) {
+                if (!latestHit.transparent)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private Illumination traceRayIllumination(Vector3 origin, Vector3 relRay) {
+        RaycastHit closestHit = null;
+
+        // Find closest object hit
+        for (VisibleObject vo : visibleObjects) {
+            RaycastHit latestHit = vo.checkRayCollision(origin, relRay);
+            if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
+                closestHit = latestHit;
+            }
+        }
+
+        Illumination base = Illumination.NO_LIGHT;
+
+        // No object were hit, return darkness
+        if (closestHit == null)
+            return base;
+
+        // Object is reflective, trace new rays
+        if (closestHit.reflective || closestHit.transparent) {
+            // TODO Reflection & Refraction
+            // base = base.combine(traceRayIllumination());
+        }
+
+        // Object is opaque
+        else if (closestHit.opaque) {
+            return base.combine(getIllumination(closestHit)).applyAlbedo(closestHit.albedo, closestHit.diffusionRate);
+        }
+
+        return base;
     }
 }

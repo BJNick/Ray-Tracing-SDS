@@ -45,6 +45,7 @@ public class Background implements VisibleObject {
         return new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
                 absCol,
                 Background.class.getSimpleName() + " at " + angleZ,
+                this,
                 pos.sub(col).normalized(),
                 new Color(getPixel(angleZ, absCol.y)));
     }

@@ -10,6 +10,7 @@ public class Illumination {
 
     public final static Illumination NO_LIGHT = new Illumination(0, 0, 0);
     public final static Illumination WHITE = new Illumination(1, 1, 1);
+    public final static Illumination AMBIENT = new Illumination(0.25f, 0.25f, 0.25f);
 
     public Illumination(float R, float G, float B){
         this.R = R;
@@ -47,4 +48,12 @@ public class Illumination {
         return c / 255f;
     }
 
+    @Override
+    public String toString() {
+        return "Illumination{" +
+                "R=" + R +
+                ", G=" + G +
+                ", B=" + B +
+                '}';
+    }
 }

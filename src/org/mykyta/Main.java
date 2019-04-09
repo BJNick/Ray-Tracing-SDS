@@ -18,13 +18,18 @@ public class Main {
         frame.setVisible(true);
 
         ArrayList<VisibleObject> objects = new ArrayList<>();
-        RaycastRenderer raycast = new RaycastRenderer(objects, render.W, render.H, (float) Math.PI / 4);
+        ArrayList<LightSource> sources = new ArrayList<>();
+
+        RaycastRenderer raycast = new RaycastRenderer(objects, sources, render.W, render.H, (float) Math.PI / 4);
 
         objects.add(new Background());
-
         objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc));
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838));
         objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x00ff00));
+
+        sources.add(new LightSource(Illumination.WHITE, Vector3.ZERO));
+
+        render.drawView(raycast);
 
         frame.addKeyListener(new KeyListener() {
             @Override
@@ -62,7 +67,5 @@ public class Main {
             @Override
             public void keyReleased(KeyEvent e) {}
         });
-
-        render.drawView(raycast);
     }
 }
