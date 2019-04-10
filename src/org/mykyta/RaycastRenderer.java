@@ -75,7 +75,7 @@ public class RaycastRenderer {
     private Illumination getIllumination(RaycastHit point) {
         Illumination base = Illumination.AMBIENT;
         for (LightSource ls : lightSources) {
-            if (checkVisibility(ls.point, point.position, point.object)) {
+            if (checkVisibility(ls.point, point.position, point.castsShadow ? null : point.object)) {
                 // TODO surface illumination
                 base = base.combine(ls.getIlluminationAt(point.position));
             }
@@ -87,7 +87,7 @@ public class RaycastRenderer {
         Vector3 dir = endpoint.sub(origin).normalized();
         for (VisibleObject vo : visibleObjects) {
             RaycastHit latestHit = vo.checkRayCollision(origin, dir);
-            if (latestHit != null /*&& latestHit.object != exception*/ && latestHit.depth > 0 && latestHit.depth < endpoint.sub(origin).mag()) {
+            if (latestHit != null && (exception == null || latestHit.object != exception) && latestHit.depth > 0 && latestHit.depth + 0.001f < endpoint.sub(origin).mag()) {
                 if (!latestHit.transparent)
                     return false;
             }

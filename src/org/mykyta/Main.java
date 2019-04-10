@@ -27,7 +27,8 @@ public class Main {
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838));
         objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x00ff00));
 
-        sources.add(new LightSource(Illumination.WHITE, Vector3.ZERO));
+        LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
+        sources.add(source);
 
         render.drawView(raycast);
 
@@ -36,33 +37,25 @@ public class Main {
             public void keyTyped(KeyEvent e) {}
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyChar() == ' ') {
-                    render.drawView(raycast);
-                }
-                else if(e.getKeyChar() == 'w') {
+                if(e.getKeyChar() == 'w') {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, -1).rotatedY(raycast.cameraAngle));
-                    render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 's') {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(0, 0, 1).rotatedY(raycast.cameraAngle));
-                    render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 'a') {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(-1, 0, 0).rotatedY(raycast.cameraAngle));
-                    render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 'd') {
                     raycast.cameraPos = raycast.cameraPos.add(new Vector3(1, 0, 0).rotatedY(raycast.cameraAngle));
-                    render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 'e') {
                     raycast.cameraAngle += 0.1;
-                    render.drawView(raycast);
                 }
                 else if(e.getKeyChar() == 'q') {
                     raycast.cameraAngle += -0.1;
-                    render.drawView(raycast);
                 }
+                render.drawView(raycast);
             }
             @Override
             public void keyReleased(KeyEvent e) {}

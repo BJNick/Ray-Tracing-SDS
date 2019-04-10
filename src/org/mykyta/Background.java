@@ -42,12 +42,14 @@ public class Background implements VisibleObject {
         if (Math.abs(absCol.y) > heightSize / 2)
             return null;
 
-        return new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
+        RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
                 absCol,
                 Background.class.getSimpleName() + " at " + angleZ,
                 this,
                 pos.sub(col).normalized(),
                 new Color(getPixel(angleZ, absCol.y)));
+        hit.castsShadow = false;
+        return hit;
     }
 
     private int getPixel(float angleZ, float height) {

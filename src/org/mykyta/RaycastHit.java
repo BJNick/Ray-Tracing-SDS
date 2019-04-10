@@ -23,6 +23,8 @@ class RaycastHit {
     boolean reflective = false;
     float reflectiveness = 1f;
 
+    boolean castsShadow = true;
+
     RaycastHit(float depth, Vector3 position, String objectID, VisibleObject object, Vector3 normal, Color albedo) {
         this.depth = depth;
         this.position = position;
