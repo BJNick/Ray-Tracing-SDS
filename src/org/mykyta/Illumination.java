@@ -38,6 +38,12 @@ public class Illumination {
         return new Illumination(R * fl(c.getRed()) * p, G * fl(c.getGreen()) * p, B * fl(c.getBlue()) * p);
     }
 
+    // Apply the angle of a surface using cos
+    public Illumination applyAngle(float angle) {
+        float ratio = (float) Math.cos(angle);
+        return dim(ratio);
+    }
+
     // Truncate a number like 1.2432 to 1
     private float tr(float a) {
         return Math.max(Math.min(a, 1), 0);

@@ -11,7 +11,7 @@ public class Main {
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        RenderPanel render = new RenderPanel(400, 400, 4);
+        RenderPanel render = new RenderPanel(800, 800, 1);
         frame.add(render);
         frame.setTitle("SDS Ray Tracing Demo by Mykyta");
         frame.pack();
@@ -20,7 +20,7 @@ public class Main {
         ArrayList<VisibleObject> objects = new ArrayList<>();
         ArrayList<LightSource> sources = new ArrayList<>();
 
-        RaycastRenderer raycast = new RaycastRenderer(objects, sources, render.W, render.H, (float) Math.PI / 4);
+        RaycastRenderer raycast = new RaycastRenderer(objects, sources, (float) Math.PI / 4);
 
         objects.add(new Background());
         objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc));
@@ -30,7 +30,8 @@ public class Main {
         LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
         sources.add(source);
 
-        render.drawView(raycast);
+        render.drawView(raycast, 16, false);
+        render.drawView(raycast, 1, true);
 
         frame.addKeyListener(new KeyListener() {
             @Override
@@ -55,7 +56,11 @@ public class Main {
                 else if(e.getKeyChar() == 'q') {
                     raycast.cameraAngle += -0.1;
                 }
-                render.drawView(raycast);
+                if(e.getKeyChar() == ' ') {
+                    render.drawView(raycast, 1, true);
+                } else {
+                    render.drawView(raycast, 16, false);
+                }
             }
             @Override
             public void keyReleased(KeyEvent e) {}

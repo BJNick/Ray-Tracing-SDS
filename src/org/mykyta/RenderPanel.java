@@ -31,15 +31,20 @@ class RenderPanel extends JPanel implements MouseListener {
         this.addMouseListener(this);
     }
 
-    public void drawView(RaycastRenderer renderer) {
+    public void drawView(RaycastRenderer renderer, int sc, boolean enhance) {
         this.usedRenderer = renderer;
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < W; i++) {
-            for (int j = 0; j < H; j++) {
-                bufferedImage.setRGB(i, j, renderer.getPixel(i, j));
-                repaint();
+        for (int i = 0; i < W/sc; i++) {
+            for (int j = 0; j < H/sc; j++) {
+                int rgb = renderer.getPixel(i, j, W/sc, H/sc);
+                for (int a = 0; a < sc; a++)
+                    for (int b = 0; b < sc; b++)
+                        bufferedImage.setRGB(i*sc + a, j*sc + b, rgb);
             }
+            if (enhance)
+                paintImmediately(0, 0, W, H);
         }
+        repaint(0);
         long endTime = System.currentTimeMillis();
         if (printRenderDuration)
             System.out.println("Rendered in " + (endTime - startTime) + "ms");
@@ -52,10 +57,11 @@ class RenderPanel extends JPanel implements MouseListener {
         g2.drawImage(bufferedImage, transform, null);
     }
 
+
     @Override
     public void mouseReleased(MouseEvent e) {
         System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
-        System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight()));
+        System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight(), W, H));
     }
 
     @Override
