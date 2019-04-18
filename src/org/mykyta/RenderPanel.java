@@ -48,9 +48,6 @@ class RenderPanel extends JPanel implements MouseListener {
                 int rgb = renderer.getPixel(i, j, W/sc, H/sc);
                 bImgGraphics.setPaint(new Color (rgb));
                 bImgGraphics.fillRect(i*sc, j*sc, sc, sc);
-                //for (int a = 0; a < sc; a++)
-                //    for (int b = 0; b < sc; b++)
-                //        bufferedImage.setRGB(i*sc + a, j*sc + b, rgb);
             }
             if (enhance)
                 paintImmediately(0, 0, W, H);

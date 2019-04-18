@@ -11,7 +11,7 @@ public class Main {
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        RenderPanel render = new RenderPanel(800, 800, 1, true);
+        RenderPanel render = new RenderPanel(800, 800, 1, false);
         frame.add(render);
         frame.setTitle("SDS Ray Tracing Demo by Mykyta");
         frame.pack();
@@ -29,8 +29,9 @@ public class Main {
 
         LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
         sources.add(source);
+        objects.add(source);
 
-        render.drawViewAA(raycast, 16, false);
+        render.drawViewAA(raycast, 10, false);
         // render.drawView(raycast, 1, true);
 
         frame.addKeyListener(new KeyListener() {
@@ -59,7 +60,7 @@ public class Main {
                 if(e.getKeyChar() == ' ') {
                     render.drawView(raycast, 1, true);
                 } else {
-                    render.drawViewAA(raycast, 16, false);
+                    render.drawViewAA(raycast, 10, false);
                 }
             }
             @Override

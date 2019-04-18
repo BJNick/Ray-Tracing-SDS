@@ -10,12 +10,19 @@ public class Illumination {
 
     public final static Illumination NO_LIGHT = new Illumination(0, 0, 0);
     public final static Illumination WHITE = new Illumination(1, 1, 1);
-    public final static Illumination AMBIENT = new Illumination(0.25f, 0.25f, 0.25f);
+    public final static Illumination AMBIENT = new Illumination(0.5f, 0.5f, 0.5f);
 
     public Illumination(float R, float G, float B){
         this.R = R;
         this.G = G;
         this.B = B;
+    }
+
+    public Illumination(int rgb, float intencity){
+        Color color = new Color(rgb);
+        this.R = color.getRed() / 255f * intencity;
+        this.G = color.getGreen() / 255f * intencity;
+        this.B = color.getBlue() / 255f * intencity;
     }
 
     // Return a screen-pixel color

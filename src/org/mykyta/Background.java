@@ -1,7 +1,6 @@
 package org.mykyta;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -47,8 +46,8 @@ public class Background implements VisibleObject {
                 Background.class.getSimpleName() + " at " + angleZ,
                 this,
                 pos.sub(col).normalized(),
-                new Color(getPixel(angleZ, absCol.y)));
-        hit.castsShadow = false;
+                ObjectMaterial.createGlowing(getPixel(angleZ, absCol.y), 1f, false));
+        hit.material.castsShadow = false;
         return hit;
     }
 
