@@ -1,6 +1,7 @@
 package org.mykyta;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -8,17 +9,19 @@ public class Background implements VisibleObject {
 
     private float R = 500;
     private Vector3 pos = Vector3.ZERO;
-    private float heightSize = 700;
+    private float heightSize = 650;
 
     private BufferedImage texture;
 
     public Background() {
-        texture = new BufferedImage(1558, 300,
+        //texture = new BufferedImage(1558, 300,
+        //        BufferedImage.TYPE_INT_RGB);
+        texture = new BufferedImage(9642, 1856,
                 BufferedImage.TYPE_INT_RGB);
 
         // Reading input file
         try {
-            texture = ImageIO.read(this.getClass().getResource("/images/panorama.jpg"));
+            texture = ImageIO.read(this.getClass().getResource("/images/panoramaHD.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +49,7 @@ public class Background implements VisibleObject {
                 Background.class.getSimpleName() + " at " + angleZ,
                 this,
                 pos.sub(col).normalized(),
-                ObjectMaterial.createGlowing(getPixel(angleZ, absCol.y), 1f, false));
+                ObjectMaterial.createGlowing(Illumination.WHITE.applyAlbedo(new Color(getPixel(angleZ, absCol.y)), 1f), false));
         hit.material.castsShadow = false;
         return hit;
     }

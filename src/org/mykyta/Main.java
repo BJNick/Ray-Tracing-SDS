@@ -25,7 +25,7 @@ public class Main {
         objects.add(new Background());
         objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc));
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838));
-        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x00ff00));
+        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28));
 
         LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
         sources.add(source);

@@ -88,9 +88,11 @@ public class Vector3 {
         return (float) Math.acos(this.dot(v) / (mag() * v.mag()));
     }
 
-    // Apply Rodrigues rotation matrix (important for reflection and refraction)
-    // public float rotate(float a, Vector3 v) {}
 
+    // Apply Rodrigues rotation matrix (important for reflection and refraction)
+    public float rotate(float a, Vector3 v) {
+        return -1f; // TODO
+    }
 
     // Print out the vector in [x, y, z] format
     @Override
@@ -101,4 +103,58 @@ public class Vector3 {
                 ", z=" + z +
                 ']';
     }
+
+
+    // Class matrix for multiplication
+    private class Matrix3x3 {
+
+        private final float[][] matrix;
+
+        public Matrix3x3(float... m) {
+            matrix = new float[3][3];
+            for (int i = 0; i < m.length; i++) {
+                matrix[i/3][i%3] = m[i];
+            }
+        }
+
+        public Matrix3x3(float[][] m) {
+            matrix = m;
+        }
+
+        public float get(int row, int column) {
+            return matrix[row][column];
+        }
+
+        public Matrix3x3 multiply(Matrix3x3 other) {
+            float[][] ret = new float[3][3];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    ret[i][j] = new Vector3(get(i, 0), get(i, 1), get(i, 2))
+                            .dot(new Vector3(other.get(0, j), other.get(1, j), other.get(2, j)));
+                }
+            }
+            return new Matrix3x3(ret);
+        }
+
+        public Matrix3x3 times(float value) {
+            float[][] ret = new float[3][3];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    ret[i][j] = ret[i][j] * value;
+                }
+            }
+            return new Matrix3x3(ret);
+        }
+
+        public Matrix3x3 add(Matrix3x3 other) {
+            float[][] ret = new float[3][3];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    ret[i][j] = matrix[i][j] + other.matrix[i][j];
+                }
+            }
+            return new Matrix3x3(ret);
+        }
+    }
+
 }
