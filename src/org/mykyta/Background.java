@@ -11,6 +11,9 @@ public class Background implements VisibleObject {
     private Vector3 pos = Vector3.ZERO;
     private float heightSize = 650;
 
+    private final int BOTTOM_COLOR = 0x000000;// 0x6B7634;
+    private final int TOP_COLOR = 0x223D74;
+
     private BufferedImage texture;
 
     public Background() {
@@ -41,8 +44,21 @@ public class Background implements VisibleObject {
 
         float angleZ = (col.sub(pos).x >= 0) ? Vector3.FRONT.angle(col.sub(pos)) : (float) Math.PI * 2 - Vector3.FRONT.angle(col.sub(pos));
 
-        if (Math.abs(absCol.y) > heightSize / 2)
-            return null;
+        if (Math.abs(absCol.y) > heightSize / 2) {
+            if (absCol.y > 0) {
+                absCol = new Vector3(absCol.x, Math.max(Math.min(absCol.y, heightSize / 2 - 1), -heightSize / 2 + 1), absCol.z);
+            } else {
+                // return null;
+                RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
+                        absCol,
+                        Background.class.getSimpleName() + " at " + angleZ,
+                        this,
+                        pos.sub(col).normalized(),
+                        ObjectMaterial.createGlowing(Illumination.WHITE.applyAlbedo(new Color(BOTTOM_COLOR), 1f), false));
+                hit.material.castsShadow = false;
+                return hit;
+            }
+        }
 
         RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
                 absCol,

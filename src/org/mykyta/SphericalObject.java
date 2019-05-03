@@ -13,7 +13,8 @@ public class SphericalObject implements VisibleObject {
     public SphericalObject(Vector3 position, float radius) {
         this.position = position;
         this.radius = radius;
-        this.material = ObjectMaterial.createOpaque(0x00FF00, 1f);
+        // this.material = ObjectMaterial.createOpaque(0x00FF00, 1f);
+        this.material = ObjectMaterial.createMirror(1f);
     }
 
     public SphericalObject(Vector3 position, float radius, int color) {

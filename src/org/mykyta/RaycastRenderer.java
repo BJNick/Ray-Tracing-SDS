@@ -88,17 +88,27 @@ public class RaycastRenderer {
             return base;
 
         // Object is reflective, trace new rays
-        if (closestHit.material.reflective || closestHit.material.transparent) {
-            // TODO Reflection & Refraction
-            // base = base.combine(traceRayIllumination());
+        if (closestHit.material.reflective) {
+            // TODO Reflection
+            Vector3 incident = relRay.scale(-1);
+            float angle = Math.abs(closestHit.normal.angle(incident));
+            Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
+            base = base.combine(
+                    traceRayIllumination(closestHit.position, closestHit.normal.rotate(angle, rotAxis, closestHit.normal))
+                            .dim(closestHit.material.reflectiveness)
+            );
         }
 
-        // Object is opaque
-        else if (closestHit.material.opaque) {
-            return base.combine(getIlluminationAt(closestHit)).applyAlbedo(closestHit.material.albedo, closestHit.material.diffusionRate);
+        if (closestHit.material.transparent) {
+            // TODO Refraction
         }
-        else if (closestHit.material.glows) {
-            return base.combine(closestHit.material.illumination);
+
+        if (closestHit.material.opaque) {
+            base = base.combine(getIlluminationAt(closestHit)).applyAlbedo(closestHit.material.albedo, closestHit.material.diffusionRate);
+        }
+
+        if (closestHit.material.glows) {
+            base = base.combine(closestHit.material.illumination);
         }
 
         return base;

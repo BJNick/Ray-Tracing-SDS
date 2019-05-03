@@ -34,6 +34,13 @@ public class ObjectMaterial {
         return ret;
     }
 
+    public static ObjectMaterial createMirror(float reflectiveness) {
+        ObjectMaterial ret = new ObjectMaterial();
+        ret.reflective = true;
+        ret.reflectiveness = reflectiveness;
+        return ret;
+    }
+
     public static ObjectMaterial createGlowing(Illumination illumination, boolean castsShadow) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.glows = true;
