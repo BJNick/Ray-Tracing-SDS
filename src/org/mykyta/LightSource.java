@@ -7,7 +7,7 @@ public class LightSource extends SphericalObject {
     ObjectMaterial material;
 
     public LightSource(Illumination base, Vector3 point) {
-        super(point, 0.1f, 0xFFFFFF);
+        super(point, 0.1f, 0xFFFFFF, false);
         baseIllumination = base;
         material = ObjectMaterial.createGlowing(base, false);
         this.point = point;

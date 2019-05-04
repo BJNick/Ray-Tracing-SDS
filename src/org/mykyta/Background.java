@@ -45,9 +45,9 @@ public class Background implements VisibleObject {
         float angleZ = (col.sub(pos).x >= 0) ? Vector3.FRONT.angle(col.sub(pos)) : (float) Math.PI * 2 - Vector3.FRONT.angle(col.sub(pos));
 
         if (Math.abs(absCol.y) > heightSize / 2) {
-            if (absCol.y > 0) {
+            //if (absCol.y > 0) {
                 absCol = new Vector3(absCol.x, Math.max(Math.min(absCol.y, heightSize / 2 - 1), -heightSize / 2 + 1), absCol.z);
-            } else {
+            /*} else {
                 // return null;
                 RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),
                         absCol,
@@ -57,7 +57,7 @@ public class Background implements VisibleObject {
                         ObjectMaterial.createGlowing(Illumination.WHITE.applyAlbedo(new Color(BOTTOM_COLOR), 1f), false));
                 hit.material.castsShadow = false;
                 return hit;
-            }
+            }*/
         }
 
         RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),

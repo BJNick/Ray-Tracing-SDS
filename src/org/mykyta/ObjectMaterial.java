@@ -53,4 +53,22 @@ public class ObjectMaterial {
         return createGlowing(new Illumination(rgb, intensity), castsShadow);
     }
 
+    public ObjectMaterial merge(ObjectMaterial mat) {
+        opaque = opaque || mat.opaque;
+        diffusionRate = Math.min(diffusionRate, mat.diffusionRate);
+        if (albedo == null) albedo = mat.albedo;
+
+        transparent = transparent || mat.transparent;
+        refractionCoeff = Math.min(refractionCoeff, mat.refractionCoeff);
+
+        reflective = reflective || mat.reflective;
+        reflectiveness = Math.min(reflectiveness, mat.reflectiveness);
+
+        glows = glows || mat.glows;
+        if (illumination == null) illumination = mat.illumination;
+        castsShadow = castsShadow && mat.castsShadow;
+
+        return this;
+    }
+
 }

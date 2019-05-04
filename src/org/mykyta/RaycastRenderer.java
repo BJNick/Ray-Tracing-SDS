@@ -104,7 +104,7 @@ public class RaycastRenderer {
         }
 
         if (closestHit.material.opaque) {
-            base = base.combine(getIlluminationAt(closestHit)).applyAlbedo(closestHit.material.albedo, closestHit.material.diffusionRate);
+            base = base.combine(getIlluminationAt(closestHit).applyAlbedo(closestHit.material.albedo, closestHit.material.diffusionRate));
         }
 
         if (closestHit.material.glows) {
