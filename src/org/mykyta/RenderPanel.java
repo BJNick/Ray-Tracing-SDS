@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 class RenderPanel extends JPanel implements MouseListener {
 
-    private BufferedImage bufferedImage;
+    public BufferedImage bufferedImage;
     public final int W, H;
     private AffineTransform transform;
     private RaycastRenderer usedRenderer;
