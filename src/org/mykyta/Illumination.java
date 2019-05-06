@@ -51,6 +51,20 @@ public class Illumination {
         return dim(ratio);
     }
 
+    public static float getPartialReflection(float i, float r) {
+
+        float pp2 = (float) Math.sin(i - r);
+        float pp1 = (float) Math.sin(i + r);
+        float perpendicular = (pp2 * pp2) / (pp1 * pp1);
+
+        float pl2 = (float) Math.tan(i - r);
+        float pl1 = (float) Math.tan(i + r);
+        float parallel = (pl2 * pl2) / (pl1 * pl1);
+
+        return (perpendicular + parallel) / 2;
+
+    }
+
     // Truncate a number like 1.2432 to 1
     private float tr(float a) {
         return Math.max(Math.min(a, 1), 0);

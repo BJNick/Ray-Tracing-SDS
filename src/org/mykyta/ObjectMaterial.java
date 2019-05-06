@@ -41,6 +41,15 @@ public class ObjectMaterial {
         return ret;
     }
 
+    public static ObjectMaterial createTransparent(float refractionCoeff) {
+        ObjectMaterial ret = new ObjectMaterial();
+        ret.reflective = true;
+        ret.reflectiveness = 1f;  // TODO partial reflectiveness based on angle
+        ret.transparent = true;
+        ret.refractionCoeff = refractionCoeff;
+        return ret;
+    }
+
     public static ObjectMaterial createGlowing(Illumination illumination, boolean castsShadow) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.glows = true;

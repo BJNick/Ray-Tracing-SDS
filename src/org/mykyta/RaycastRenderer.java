@@ -56,9 +56,11 @@ public class RaycastRenderer {
         RaycastHit closestHit = null;
 
         for (VisibleObject vo : visibleObjects) {
-            RaycastHit latestHit = vo.checkRayCollision(origin, relRay);
-            if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
-                closestHit = latestHit;
+            if (vo.checkRayCollision(origin, relRay) != null)
+                for (RaycastHit latestHit : vo.checkRayCollision(origin, relRay)) {
+                    if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
+                        closestHit = latestHit;
+                    }
             }
         }
 
@@ -75,10 +77,12 @@ public class RaycastRenderer {
 
         // Find closest object hit
         for (VisibleObject vo : visibleObjects) {
-            RaycastHit latestHit = vo.checkRayCollision(origin, relRay);
-            if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
-                closestHit = latestHit;
-            }
+            if (vo.checkRayCollision(origin, relRay) != null)
+                for (RaycastHit latestHit : vo.checkRayCollision(origin, relRay)) {
+                    if (latestHit != null && latestHit.depth > 0 && (closestHit == null || latestHit.depth < closestHit.depth)) {
+                        closestHit = latestHit;
+                    }
+                }
         }
 
         Illumination base = Illumination.NO_LIGHT;
@@ -88,8 +92,7 @@ public class RaycastRenderer {
             return base;
 
         // Object is reflective, trace new rays
-        if (closestHit.material.reflective) {
-            // TODO Reflection
+        if (closestHit.material.reflective && !closestHit.material.transparent) {
             Vector3 incident = relRay.scale(-1);
             float angle = Math.abs(closestHit.normal.angle(incident));
             Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
@@ -101,6 +104,23 @@ public class RaycastRenderer {
 
         if (closestHit.material.transparent) {
             // TODO Refraction
+            Vector3 incident = relRay.scale(-1);
+            float reflectedAngle = Math.abs(closestHit.normal.angle(incident));
+            float refractedAngle = (float) Math.asin(Math.sin(reflectedAngle) * (closestHit.inside ? 1f / closestHit.material.refractionCoeff : closestHit.material.refractionCoeff));
+            Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
+
+            Vector3 reflectedDir = closestHit.normal.rotate(reflectedAngle, rotAxis, closestHit.normal);
+            Vector3 refractedDir = closestHit.normal.rotate(-refractedAngle, rotAxis, closestHit.normal.scale(-1));
+            float partialReflection = Illumination.getPartialReflection(reflectedAngle, reflectedAngle);
+
+            base = base.combine(
+                    traceRayIllumination(closestHit.position, reflectedDir)
+                            .dim(partialReflection)
+            );
+            base = base.combine(
+                    traceRayIllumination(closestHit.position, refractedDir)
+                            .dim(1 - partialReflection)
+            );
         }
 
         if (closestHit.material.opaque) {
@@ -130,10 +150,12 @@ public class RaycastRenderer {
     private boolean checkVisibility(Vector3 origin, Vector3 endpoint, VisibleObject exception) {
         Vector3 dir = endpoint.sub(origin).normalized();
         for (VisibleObject vo : visibleObjects) {
-            RaycastHit latestHit = vo.checkRayCollision(origin, dir);
-            if (latestHit != null && (exception == null || latestHit.object != exception) && latestHit.depth > 0 && latestHit.depth + 0.001f < endpoint.sub(origin).mag()) {
-                if (!latestHit.material.transparent)
-                    return false;
+            if (vo.checkRayCollision(origin, dir) != null)
+                for (RaycastHit latestHit : vo.checkRayCollision(origin, dir)) {
+                    if (latestHit != null && (exception == null || latestHit.object != exception) && latestHit.depth > 0 && latestHit.depth + 0.001f < endpoint.sub(origin).mag()) {
+                        if (!latestHit.material.transparent)
+                            return false;
+                    }
             }
         }
         return true;

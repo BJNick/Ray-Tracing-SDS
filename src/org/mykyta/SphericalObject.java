@@ -25,16 +25,24 @@ public class SphericalObject implements VisibleObject {
     }
 
     @Override
-    public RaycastHit checkRayCollision(Vector3 origin, Vector3 relRay) {
-        Vector3 hit = CollisionEquations
-                .checkRaySphereCollision(origin, relRay, position, radius, false);
+    public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
+        Vector3 hit[] = CollisionEquations
+                .checkRaySphereCollision(origin, relRay, position, radius);
         if (hit != null)
-            return new RaycastHit(hit.sub(origin).signedScale(relRay),  // Depth
-                    hit,  // Position
-                    SphericalObject.class.getSimpleName(),
-                    this,
-                    hit.sub(position).normalized(),  // Normal
-                    material);
+            return new RaycastHit[]{
+                    new RaycastHit(hit[0].sub(origin).signedScale(relRay),  // Depth
+                            hit[0],  // Position
+                            SphericalObject.class.getSimpleName(),
+                            this,
+                            hit[0].sub(position).normalized(),  // Normal
+                            material, false),
+                    new RaycastHit(hit[1].sub(origin).signedScale(relRay),  // Depth
+                            hit[1],  // Position
+                            SphericalObject.class.getSimpleName(),
+                            this,
+                            hit[1].sub(position).normalized(),  // Normal
+                            material, true)
+            };
         return null;
     }
 

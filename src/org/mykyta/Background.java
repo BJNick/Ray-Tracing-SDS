@@ -11,9 +11,6 @@ public class Background implements VisibleObject {
     private Vector3 pos = Vector3.ZERO;
     private float heightSize = 650;
 
-    private final int BOTTOM_COLOR = 0x000000;// 0x6B7634;
-    private final int TOP_COLOR = 0x223D74;
-
     private BufferedImage texture;
 
     public Background() {
@@ -30,12 +27,17 @@ public class Background implements VisibleObject {
         }
     }
 
-    public RaycastHit checkRayCollision(Vector3 origin, Vector3 relRay) {
+    public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
 
         Vector3 flatOrigin = new Vector3(origin.x,0, origin.z);
         Vector3 flatD = new Vector3(relRay.x,0, relRay.z);
 
-        Vector3 col = CollisionEquations.checkRaySphereCollision(flatOrigin, flatD, pos, R, true);
+        Vector3[] collisions = CollisionEquations.checkRaySphereCollision(flatOrigin, flatD, pos, R);
+
+        if (collisions == null)
+            return null;
+
+        Vector3 col = collisions[1];
 
         if (col == null)
             return null;
@@ -65,9 +67,10 @@ public class Background implements VisibleObject {
                 Background.class.getSimpleName() + " at " + angleZ,
                 this,
                 pos.sub(col).normalized(),
-                ObjectMaterial.createGlowing(Illumination.WHITE.applyAlbedo(new Color(getPixel(angleZ, absCol.y)), 1f), false));
+                ObjectMaterial.createGlowing(Illumination.WHITE.applyAlbedo(new Color(getPixel(angleZ, absCol.y)), 1f), false),
+                false);
         hit.material.castsShadow = false;
-        return hit;
+        return new RaycastHit[]{hit};
     }
 
     private int getPixel(float angleZ, float height) {

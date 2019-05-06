@@ -11,18 +11,20 @@ class RaycastHit {
     final String objectID;
     final VisibleObject object;
     final ObjectMaterial material;
+    final boolean inside;
 
-    RaycastHit(float depth, Vector3 position, String objectID, VisibleObject object, Vector3 normal, ObjectMaterial material) {
+    RaycastHit(float depth, Vector3 position, String objectID, VisibleObject object, Vector3 normal, ObjectMaterial material, boolean inside) {
         this.depth = depth;
         this.position = position;
         this.objectID = objectID;
         this.object = object;
         this.normal = normal;
         this.material = material;
+        this.inside = false;
     }
 
     public RaycastHit changeMaterial(ObjectMaterial newmat) {
-        return new RaycastHit(depth, position, objectID, object, normal, newmat);
+        return new RaycastHit(depth, position, objectID, object, normal, newmat, inside);
     }
 
 }

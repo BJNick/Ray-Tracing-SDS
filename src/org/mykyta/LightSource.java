@@ -19,11 +19,11 @@ public class LightSource extends SphericalObject {
     }
 
     @Override
-    public RaycastHit checkRayCollision(Vector3 origin, Vector3 relRay) {
-        RaycastHit hit = super.checkRayCollision(origin, relRay);
+    public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
+        RaycastHit hit[] = super.checkRayCollision(origin, relRay);
         if (hit == null)
             return null;
-        return hit.changeMaterial(material);
+        return new RaycastHit[]{hit[0].changeMaterial(material), hit[1].changeMaterial(material)};
     }
 
 }

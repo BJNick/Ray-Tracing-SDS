@@ -33,6 +33,8 @@ public class Main {
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, true));
         objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, true));
 
+        objects.add(new SphericalMarble(new Vector3(0, 0, 5), 1f));
+
         LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
         sources.add(source);
         objects.add(source);
