@@ -115,7 +115,7 @@ public class RaycastRenderer {
             if (Float.isNaN(reflectedAngle))
                 return Illumination.ERROR;
 
-            float refractedAngle = (float) Math.asin(Math.sin(reflectedAngle) * (!closestHit.inside ? 1f / closestHit.material.refractionCoeff : closestHit.material.refractionCoeff));
+            float refractedAngle = (float) Math.asin(Math.sin(reflectedAngle) * (!closestHit.inside ? 1f / closestHit.material.refractionIndex : closestHit.material.refractionIndex));
 
             Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
 
@@ -127,12 +127,15 @@ public class RaycastRenderer {
 
             base = base.combine(
                     traceRayIllumination(closestHit.position.add(reflectedDir.scale(0.01f)), reflectedDir, recursionDepth + 1)
-                            .dim(partialReflection)
+                            .dim(closestHit.material.transparency).dim(partialReflection)
             );
             base = base.combine(
                     traceRayIllumination(closestHit.position.add(refractedDir.scale(0.01f)), refractedDir, recursionDepth + 1)
-                            .dim(1f - partialReflection)
+                            .dim(closestHit.material.transparency).dim(1f - partialReflection).applyAlbedo(closestHit.material.albedo, 1f)
             );
+            if (closestHit.material.transparency < 1f) {
+                base = base.combine(getIlluminationAt(closestHit).applyAlbedo(closestHit.material.albedo, 1f - closestHit.material.transparency));
+            }
         }
 
         if (closestHit.material.opaque) {

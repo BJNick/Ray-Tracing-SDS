@@ -13,7 +13,8 @@ public class ObjectMaterial {
     Color albedo;
 
     boolean transparent = false;
-    float refractionCoeff = 1f;
+    float refractionIndex = 1f;
+    float transparency = 1f;
 
     boolean reflective = false;
     float reflectiveness = 1f;
@@ -41,12 +42,15 @@ public class ObjectMaterial {
         return ret;
     }
 
-    public static ObjectMaterial createTransparent(float refractionCoeff) {
+    public static ObjectMaterial createTransparent(float refractionIndex, float transparency) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.reflective = true;
         ret.reflectiveness = 1f;  // TODO partial reflectiveness based on angle
         ret.transparent = true;
-        ret.refractionCoeff = refractionCoeff;
+        ret.transparency = transparency;
+        ret.refractionIndex = refractionIndex;
+        ret.castsShadow = false;
+        ret.albedo = new Color(0xFFFFFF);
         return ret;
     }
 
@@ -68,7 +72,8 @@ public class ObjectMaterial {
         if (albedo == null) albedo = mat.albedo;
 
         transparent = transparent || mat.transparent;
-        refractionCoeff = Math.min(refractionCoeff, mat.refractionCoeff);
+        transparency = Math.min(transparency, mat.transparency);
+        refractionIndex = Math.max(refractionIndex, mat.refractionIndex);
 
         reflective = reflective || mat.reflective;
         reflectiveness = Math.min(reflectiveness, mat.reflectiveness);

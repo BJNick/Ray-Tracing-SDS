@@ -29,15 +29,24 @@ public class Main {
         RaycastRenderer raycast = new RaycastRenderer(objects, sources, (float) Math.PI / 4);
 
         objects.add(new Background());
-        objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, true));
-        objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, true));
-        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, true));
 
-        objects.add(new SphericalMarble(new Vector3(0, 0, 5), 1f));
+        objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, 0.3f));
+        objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, 0.9f));
+        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, 0.3f));
+
+        /*objects.add(new SphericalMarble(new Vector3(0, 0, 6), 1f, 1.01f, 0xFFFFFF, 1f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, 3), 1f, 1.10f, 0x00FF00, 1f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, 0), 1f, 1.33f, 0xFF0000, 1f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -3), 1f, 2f, 0xFF00FF, 1f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -6), 1f, 3f, 0x0000FF, 1f));*/
+
+        /* objects.add(new SphericalMarble(new Vector3(0, 0, 0), 1f, 1.52f, 0xFF00FF, 0.9f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -3), 1f, 1.52f, 0x00FFFF, 0.9f));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -6), 1f, 1.52f, 0xFFFF00, 0.9f));*/
 
         LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
         sources.add(source);
-        objects.add(source);
+        // objects.add(source);
 
         render.drawViewAA(raycast, 10, false);
         // render.drawView(raycast, 1, true);

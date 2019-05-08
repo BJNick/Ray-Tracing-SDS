@@ -9,19 +9,18 @@ public class SphericalObject implements VisibleObject {
     float radius;
 
     ObjectMaterial material;
+    String name;
 
     public SphericalObject(Vector3 position, float radius) {
         this.position = position;
         this.radius = radius;
         this.material = ObjectMaterial.createOpaque(0x00FF00, 1f);
+        name = SphericalObject.class.getSimpleName();
     }
 
-    public SphericalObject(Vector3 position, float radius, int color, boolean reflective) {
+    public SphericalObject(Vector3 position, float radius, int color, float reflective) {
         this(position, radius);
-        if (reflective)
-            this.material = ObjectMaterial.createMirror(0.4f).merge(ObjectMaterial.createOpaque(color, 0.8f));
-        else
-            this.material = ObjectMaterial.createOpaque(color, 1f);
+        this.material = ObjectMaterial.createMirror(reflective).merge(ObjectMaterial.createOpaque(color, 1f - reflective));
     }
 
     @Override
@@ -32,13 +31,13 @@ public class SphericalObject implements VisibleObject {
             return new RaycastHit[]{
                     new RaycastHit(hit[0].sub(origin).signedScale(relRay),  // Depth
                             hit[0],  // Position
-                            SphericalObject.class.getSimpleName(),
+                            name,
                             this,
                             hit[0].sub(position).normalized(),  // Normal
                             material, false),
                     new RaycastHit(hit[1].sub(origin).signedScale(relRay),  // Depth
                             hit[1],  // Position
-                            SphericalObject.class.getSimpleName(),
+                            name,
                             this,
                             hit[1].sub(position).normalized().scale(-1),  // Normal
                             material, true)
