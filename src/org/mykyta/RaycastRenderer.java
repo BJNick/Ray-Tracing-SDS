@@ -23,7 +23,7 @@ public class RaycastRenderer {
 
     public int getPixel(int u, int v, int width, int height) {
         Vector3 relRay = createRay(u, v, width, height);
-        Illumination illum = traceRayIllumination(cameraPos, relRay);
+        Illumination illum = traceRayIllumination(cameraPos, relRay, 0);
         if (illum != null)
             return illum.toScreenColor();
         return 0x000000;
@@ -72,7 +72,11 @@ public class RaycastRenderer {
         return closestHit;
     }
 
-    private Illumination traceRayIllumination(Vector3 origin, Vector3 relRay) {
+    private Illumination traceRayIllumination(Vector3 origin, Vector3 relRay, int recursionDepth) {
+
+        if (recursionDepth > 10)
+            return Illumination.AMBIENT;
+
         RaycastHit closestHit = null;
 
         // Find closest object hit
@@ -95,31 +99,39 @@ public class RaycastRenderer {
         if (closestHit.material.reflective && !closestHit.material.transparent) {
             Vector3 incident = relRay.scale(-1);
             float angle = Math.abs(closestHit.normal.angle(incident));
+
             Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
+            Vector3 newDir = closestHit.normal.rotate(-angle, rotAxis);
             base = base.combine(
-                    traceRayIllumination(closestHit.position, closestHit.normal.rotate(angle, rotAxis, closestHit.normal))
+                    traceRayIllumination(closestHit.position.add(newDir.scale(0.01f)), newDir, recursionDepth + 1)
                             .dim(closestHit.material.reflectiveness)
             );
         }
 
         if (closestHit.material.transparent) {
-            // TODO Refraction
             Vector3 incident = relRay.scale(-1);
             float reflectedAngle = Math.abs(closestHit.normal.angle(incident));
-            float refractedAngle = (float) Math.asin(Math.sin(reflectedAngle) * (closestHit.inside ? 1f / closestHit.material.refractionCoeff : closestHit.material.refractionCoeff));
+
+            if (Float.isNaN(reflectedAngle))
+                return Illumination.ERROR;
+
+            float refractedAngle = (float) Math.asin(Math.sin(reflectedAngle) * (!closestHit.inside ? 1f / closestHit.material.refractionCoeff : closestHit.material.refractionCoeff));
+
             Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
 
-            Vector3 reflectedDir = closestHit.normal.rotate(reflectedAngle, rotAxis, closestHit.normal);
-            Vector3 refractedDir = closestHit.normal.rotate(-refractedAngle, rotAxis, closestHit.normal.scale(-1));
-            float partialReflection = Illumination.getPartialReflection(reflectedAngle, reflectedAngle);
+            Vector3 reflectedDir = closestHit.normal.rotate(-reflectedAngle, rotAxis);
+            Vector3 refractedDir = closestHit.normal.scale(-1).rotate(refractedAngle, rotAxis);
+
+            float partialReflection = Illumination.getPartialReflection(reflectedAngle, refractedAngle);
+            // System.out.println(reflectedAngle + " " + refractedAngle + " " + partialReflection);
 
             base = base.combine(
-                    traceRayIllumination(closestHit.position, reflectedDir)
+                    traceRayIllumination(closestHit.position.add(reflectedDir.scale(0.01f)), reflectedDir, recursionDepth + 1)
                             .dim(partialReflection)
             );
             base = base.combine(
-                    traceRayIllumination(closestHit.position, refractedDir)
-                            .dim(1 - partialReflection)
+                    traceRayIllumination(closestHit.position.add(refractedDir.scale(0.01f)), refractedDir, recursionDepth + 1)
+                            .dim(1f - partialReflection)
             );
         }
 

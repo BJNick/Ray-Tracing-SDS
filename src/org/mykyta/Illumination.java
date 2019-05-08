@@ -11,6 +11,7 @@ public class Illumination {
     public final static Illumination NO_LIGHT = new Illumination(0, 0, 0);
     public final static Illumination WHITE = new Illumination(1, 1, 1);
     public final static Illumination AMBIENT = new Illumination(0.5f, 0.5f, 0.5f);
+    public final static Illumination ERROR = new Illumination(1f, 0f, 1f);
 
     public Illumination(float R, float G, float B){
         this.R = R;
@@ -60,6 +61,9 @@ public class Illumination {
         float pl2 = (float) Math.tan(i - r);
         float pl1 = (float) Math.tan(i + r);
         float parallel = (pl2 * pl2) / (pl1 * pl1);
+
+        if (Float.isNaN(perpendicular) || Float.isNaN(parallel))
+            return 0;
 
         return (perpendicular + parallel) / 2;
 

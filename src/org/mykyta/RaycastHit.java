@@ -20,7 +20,7 @@ class RaycastHit {
         this.object = object;
         this.normal = normal;
         this.material = material;
-        this.inside = false;
+        this.inside = inside;
     }
 
     public RaycastHit changeMaterial(ObjectMaterial newmat) {

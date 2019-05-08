@@ -10,6 +10,15 @@ public class CollisionEquations {
         float dist = q.sub(qi) .mag();
         if (dist > R)
             return null;
+
+        if (p.sub(q).sqrMag() < R * R) { // Inside the sphere
+            float x = (float) Math.sqrt(R * R - dist * dist); // pc-i1
+            Vector3 pC = qi.sub(v.scale(x)); // Not tested
+            float di1 = x - Math.abs(p.sub(puv).mag());
+            Vector3 pD = p.add(v.scale(di1));
+            return new Vector3[]{pC, pD};
+        }
+
         float x = (float) Math.sqrt(R*R - dist*dist);
         Vector3 pA = qi.sub( v.scale(x) );
         Vector3 pB = qi.add( v.scale(x) );

@@ -90,7 +90,7 @@ public class Vector3 {
 
 
     // Apply Rodrigues rotation matrix (important for reflection and refraction)
-    public Vector3 rotate(float a, Vector3 w0, Vector3 v) {
+    public Vector3 rotate(float a, Vector3 w0) {
         Matrix3x3 w = new Matrix3x3(
                 0, -w0.z, w0.y,
                 w0.z, 0, -w0.x,
@@ -100,7 +100,7 @@ public class Vector3 {
                 .add(w.times((float) Math.sin(a)))
                 .add(w.multiply(w).times(1f - (float) Math.cos(a)));
 
-        return Rw.multiply(v);
+        return Rw.multiply(this);
     }
 
     // Print out the vector in [x, y, z] format
@@ -159,7 +159,7 @@ public class Vector3 {
             float[][] ret = new float[3][3];
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    ret[i][j] = ret[i][j] * value;
+                    ret[i][j] = matrix[i][j] * value;
                 }
             }
             return new Matrix3x3(ret);
@@ -173,6 +173,21 @@ public class Vector3 {
                 }
             }
             return new Matrix3x3(ret);
+        }
+
+        @Override
+        public String toString() {
+            return "Matrix3x3{" +
+                    matrix[0][0] + ", " +
+                    matrix[0][1] + ", " +
+                    matrix[0][2] + ", " +
+                    matrix[1][0] + ", " +
+                    matrix[1][1] + ", " +
+                    matrix[1][2] + ", " +
+                    matrix[2][0] + ", " +
+                    matrix[2][1] + ", " +
+                    matrix[2][2] + "" +
+                    '}';
         }
     }
 

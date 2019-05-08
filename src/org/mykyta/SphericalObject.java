@@ -19,7 +19,7 @@ public class SphericalObject implements VisibleObject {
     public SphericalObject(Vector3 position, float radius, int color, boolean reflective) {
         this(position, radius);
         if (reflective)
-            this.material = ObjectMaterial.createMirror(0.2f).merge(ObjectMaterial.createOpaque(color, 0.9f));
+            this.material = ObjectMaterial.createMirror(0.4f).merge(ObjectMaterial.createOpaque(color, 0.8f));
         else
             this.material = ObjectMaterial.createOpaque(color, 1f);
     }
@@ -40,7 +40,7 @@ public class SphericalObject implements VisibleObject {
                             hit[1],  // Position
                             SphericalObject.class.getSimpleName(),
                             this,
-                            hit[1].sub(position).normalized(),  // Normal
+                            hit[1].sub(position).normalized().scale(-1),  // Normal
                             material, true)
             };
         return null;
