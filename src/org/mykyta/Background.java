@@ -34,10 +34,10 @@ public class Background implements VisibleObject {
 
         Vector3[] collisions = CollisionEquations.checkRaySphereCollision(flatOrigin, flatD, pos, R);
 
-        if (collisions == null)
+        if (collisions.length == 0)
             return null;
 
-        Vector3 col = collisions[1];
+        Vector3 col = collisions[0];
 
         if (col == null)
             return null;
