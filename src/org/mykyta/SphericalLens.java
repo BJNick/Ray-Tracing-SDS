@@ -1,5 +1,6 @@
 package org.mykyta;
 
+// Deprecated
 public class SphericalLens implements VisibleObject {
 
     Vector3 position;
@@ -13,9 +14,9 @@ public class SphericalLens implements VisibleObject {
         this.position = position;
         d = 1f;
         R = 0.75f;
-        posA = position.sub(Vector3.FRONT.scale(d)); // in front
-        posB = position.add(Vector3.FRONT.scale(d)); // behind
-        material = ObjectMaterial.createOpaque(0xFFFFFF, 1f);
+        posA = position.sub(Vector3.FRONT.scale(d / 2)); // in front
+        posB = position.add(Vector3.FRONT.scale(d / 2)); // behind
+        material = ObjectMaterial.createTransparent(1.2f, 1f);
     }
 
     private boolean isBehindCuttingPlane(Vector3 point) {
@@ -42,12 +43,22 @@ public class SphericalLens implements VisibleObject {
                 hit = !isBehindCuttingPlane(hitsB[0]) ? hitsB[0] :
                         hitsB.length > 1 && !isBehindCuttingPlane(hitsB[1]) ? hitsB[1] : null;
                 from = posB;
-                System.out.println("B hit");
+                if (hit == null && hitsA.length > 1) {
+                    hit = hitsA[0].sub(origin).signedScale(relRay) < hitsA[1].sub(origin).signedScale(relRay) ? hitsA[0] : hitsA[1];
+                    from = posA;
+                    System.out.println("A hit");
+                } else if (hit != null)
+                    System.out.println("B hit");
             } else {
                 hit = isBehindCuttingPlane(hitsA[0]) ? hitsA[0] :
                         hitsA.length > 1 && isBehindCuttingPlane(hitsA[1]) ? hitsA[1] : null;
                 from = posA;
-                System.out.println("A hit");
+                if (hit == null && hitsB.length > 1) {
+                    hit = hitsB[0].sub(origin).signedScale(relRay) < hitsB[1].sub(origin).signedScale(relRay) ? hitsB[0] : hitsB[1];
+                    from = posB;
+                    System.out.println("B hit");
+                } else if (hit != null)
+                    System.out.println("A hit");
             }
         else { // The ray is on the inside of the lens
             inside = true;

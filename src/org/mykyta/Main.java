@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,19 +29,21 @@ public class Main {
 
         RaycastRenderer raycast = new RaycastRenderer(objects, sources, (float) Math.PI / 4);
 
-        objects.add(new Background());
+        objects.add(new Background(loadImage("/images/panoramaHD.jpg")));
 
-        /*objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, 0.3f));
+        objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, 0.3f));
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, 0.3f));
         objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, 0.3f));
 
         objects.add(new SphericalMarble(new Vector3(15, 0, 6), 1f, 1.05f));
         objects.add(new SphericalMarble(new Vector3(15, 0, 3), 1f, 1.10f));
         objects.add(new SphericalMarble(new Vector3(15, 0, 0), 1f, 1.33f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, -3), 1f, 2.54f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 3f));*/
+        objects.add(new SphericalMarble(new Vector3(15, 0, -3), 1f, 1.52f));
+        objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 2.54f));
 
-        objects.add(new SphericalLens(new Vector3(0, 0, 0), 1, 1));
+        objects.add(new PlanarObject(new Vector3(0, 0, -30), 0.001f, 5, loadImage("/images/panorama.jpg")));
+
+        // objects.add(new SphericalLens(new Vector3(0, 0, 0), 1, 1));
 
         /*objects.add(new SphericalMarble(new Vector3(0, 0, 0), 1f, 1.52f, 0xFF00FF, 0.9f));
         objects.add(new SphericalMarble(new Vector3(0, 0, -3), 1f, 1.52f, 0x00FFFF, 0.9f));
@@ -104,6 +107,19 @@ public class Main {
                 frameCount++;
             }
         }
+    }
+
+    private static BufferedImage loadImage(String filename) {
+
+        BufferedImage image = null;
+
+        try {
+            image = ImageIO.read(Main.class.getResource(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image;
     }
 
 }

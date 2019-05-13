@@ -1,9 +1,7 @@
 package org.mykyta;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Background implements VisibleObject {
 
@@ -13,18 +11,8 @@ public class Background implements VisibleObject {
 
     private BufferedImage texture;
 
-    public Background() {
-        //texture = new BufferedImage(1558, 300,
-        //        BufferedImage.TYPE_INT_RGB);
-        texture = new BufferedImage(9642, 1856,
-                BufferedImage.TYPE_INT_RGB);
-
-        // Reading input file
-        try {
-            texture = ImageIO.read(this.getClass().getResource("/images/panoramaHD.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Background(BufferedImage texture) {
+        this.texture = texture;
     }
 
     public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
@@ -48,7 +36,7 @@ public class Background implements VisibleObject {
 
         if (Math.abs(absCol.y) > heightSize / 2) {
             //if (absCol.y > 0) {
-                absCol = new Vector3(absCol.x, Math.max(Math.min(absCol.y, heightSize / 2 - 1), -heightSize / 2 + 1), absCol.z);
+            absCol = new Vector3(absCol.x, Math.max(Math.min(absCol.y, heightSize / 2), -heightSize / 2), absCol.z);
             /*} else {
                 // return null;
                 RaycastHit hit = new RaycastHit(col.sub(flatOrigin).signedScale(relRay),

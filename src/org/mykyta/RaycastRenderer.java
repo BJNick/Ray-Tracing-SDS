@@ -13,6 +13,7 @@ public class RaycastRenderer {
     public float cameraAngle = 0;
 
     private final float rasterPlaneDist = 1f;
+    private final int MaxReflectionDepth = 20;
 
     public RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
         this.visibleObjects = visibleObjects;
@@ -74,7 +75,7 @@ public class RaycastRenderer {
 
     private Illumination traceRayIllumination(Vector3 origin, Vector3 relRay, int recursionDepth) {
 
-        if (recursionDepth > 10)
+        if (recursionDepth > MaxReflectionDepth)
             return Illumination.AMBIENT;
 
         RaycastHit closestHit = null;
