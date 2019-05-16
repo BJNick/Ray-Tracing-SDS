@@ -31,26 +31,25 @@ public class Main {
 
         objects.add(new Background(loadImage("/images/panoramaHD.jpg")));
 
-        objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, 0.3f));
+        /*objects.add(new SphericalObject(new Vector3(-2, -1, 0), 1f, 0x3fc9fc, 0.3f));
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, 0.3f));
-        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, 0.3f));
+        objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, 0.3f));*/
 
-        objects.add(new SphericalMarble(new Vector3(15, 0, 6), 1f, 1.05f));
+        /*objects.add(new SphericalMarble(new Vector3(15, 0, 6), 1f, 1.05f));
         objects.add(new SphericalMarble(new Vector3(15, 0, 3), 1f, 1.10f));
         objects.add(new SphericalMarble(new Vector3(15, 0, 0), 1f, 1.33f));
         objects.add(new SphericalMarble(new Vector3(15, 0, -3), 1f, 1.52f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 2.54f));
+        objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 2.54f));*/
 
-        objects.add(new PlanarObject(new Vector3(0, 0, -30), 0.001f, 5, loadImage("/images/panorama.jpg")));
-
-        // objects.add(new SphericalLens(new Vector3(0, 0, 0), 1, 1));
+        //objects.add(new PlanarObject(new Vector3(0, -0.6f, -10), 0.00846668f, 0, loadImage("/images/testing-page.jpg")));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -3f), 2f, 1.5163f));
 
         /*objects.add(new SphericalMarble(new Vector3(0, 0, 0), 1f, 1.52f, 0xFF00FF, 0.9f));
         objects.add(new SphericalMarble(new Vector3(0, 0, -3), 1f, 1.52f, 0x00FFFF, 0.9f));
         objects.add(new SphericalMarble(new Vector3(0, 0, -6), 1f, 1.52f, 0xFFFF00, 0.9f));*/
 
-        LightSource source = new LightSource(Illumination.WHITE, new Vector3(-10, 0, 0));
-        sources.add(source);
+        //LightSource source = new LightSource(Illumination.WHITE, new Vector3(-5, 0, 0));
+        //sources.add(source);
         // objects.add(source);
 
         render.drawViewAA(raycast, 10, false);

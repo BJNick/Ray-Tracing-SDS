@@ -30,7 +30,7 @@ public class PlanarObject implements VisibleObject {
         if (texture == null)
             return ObjectMaterial.createMirror(1f);
 
-        return ObjectMaterial.createOpaque(texture.getRGB((int) Math.floor((posX + width / 2) / scale), (int) Math.floor((-posY + height / 2) / scale)), 1f);
+        return ObjectMaterial.createGlowing((texture.getRGB((int) Math.floor((posX + width / 2) / scale), (int) Math.floor((-posY + height / 2) / scale))), 1f, false);
     }
 
     public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
