@@ -23,6 +23,7 @@ public class ObjectMaterial {
     Illumination illumination;
 
     boolean castsShadow = true;
+    float shadowIntencity = 1f;
 
     private ObjectMaterial() {}
 

@@ -14,6 +14,7 @@ public class RaycastRenderer {
 
     private final float rasterPlaneDist = 1f;
     private final int MaxReflectionDepth = 10;
+    private final float pastObjectStep = 10;
 
     public RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
         this.visibleObjects = visibleObjects;
@@ -94,7 +95,7 @@ public class RaycastRenderer {
 
         // No object were hit, return darkness
         if (closestHit == null)
-            return base;
+            return Illumination.AMBIENT;
 
         // Object is reflective, trace new rays
         if (closestHit.material.reflective && !closestHit.material.transparent) {
@@ -154,27 +155,28 @@ public class RaycastRenderer {
     private Illumination getIlluminationAt(RaycastHit point) {
         Illumination base = Illumination.AMBIENT;
         for (LightSource ls : lightSources) {
-            if (checkVisibility(ls.point, point.position, point.material.castsShadow ? null : point.object)) {
-                // TODO surface illumination
+            float visibility = checkVisibility(ls.point, point.position, point.material.castsShadow ? null : point.object);
+            if (visibility > 0f)
                 base = base.combine(
                         ls.getIlluminationAt(point.position).applyAngle(point.normal.angle(ls.point.sub(point.position)))
+                                .dim(visibility)
                 );
-            }
         }
         return base;
     }
 
-    private boolean checkVisibility(Vector3 origin, Vector3 endpoint, VisibleObject exception) {
+    private float checkVisibility(Vector3 origin, Vector3 endpoint, VisibleObject exception) {
         Vector3 dir = endpoint.sub(origin).normalized();
+        float base = 1f;
         for (VisibleObject vo : visibleObjects) {
             if (vo.checkRayCollision(origin, dir) != null)
                 for (RaycastHit latestHit : vo.checkRayCollision(origin, dir)) {
                     if (latestHit != null && (exception == null || latestHit.object != exception) && latestHit.depth > 0 && latestHit.depth + 0.001f < endpoint.sub(origin).mag()) {
-                        if (!latestHit.material.transparent)
-                            return false;
+                        if (latestHit.material.castsShadow)
+                            base *= 1f - latestHit.material.shadowIntencity;
                     }
             }
         }
-        return true;
+        return base;
     }
 }
