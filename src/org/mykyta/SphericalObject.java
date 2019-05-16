@@ -48,7 +48,7 @@ public class SphericalObject implements VisibleObject {
                             hit[0],  // Position
                             name,
                             this,
-                            hit[0].sub(position).normalized(),  // Normal
+                            hit[0].sub(position).normalized().scale(-1),  // Normal
                             material, false)
             };
         return null;

@@ -13,7 +13,7 @@ public class RaycastRenderer {
     public float cameraAngle = 0;
 
     private final float rasterPlaneDist = 1f;
-    private final int MaxReflectionDepth = 20;
+    private final int MaxReflectionDepth = 10;
 
     public RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
         this.visibleObjects = visibleObjects;
@@ -130,10 +130,11 @@ public class RaycastRenderer {
                     traceRayIllumination(closestHit.position.add(reflectedDir.scale(0.01f)), reflectedDir, recursionDepth + 1)
                             .dim(closestHit.material.transparency).dim(partialReflection)
             );
-            base = base.combine(
+            if (partialReflection < 0.95)
+                base = base.combine(
                     traceRayIllumination(closestHit.position.add(refractedDir.scale(0.01f)), refractedDir, recursionDepth + 1)
                             .dim(closestHit.material.transparency).dim(1f - partialReflection).applyAlbedo(closestHit.material.albedo, 1f)
-            );
+                );
             if (closestHit.material.transparency < 1f) {
                 base = base.combine(getIlluminationAt(closestHit).applyAlbedo(closestHit.material.albedo, 1f - closestHit.material.transparency));
             }

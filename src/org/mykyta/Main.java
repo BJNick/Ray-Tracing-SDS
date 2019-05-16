@@ -35,14 +35,14 @@ public class Main {
         objects.add(new SphericalObject(new Vector3(5, 0, 0), 4f, 0xf73838, 0.3f));
         objects.add(new SphericalObject(new Vector3(0, 2, -10), 4f, 0x28ed28, 0.3f));*/
 
-        /*objects.add(new SphericalMarble(new Vector3(15, 0, 6), 1f, 1.05f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, 3), 1f, 1.10f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, 0), 1f, 1.33f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, -3), 1f, 1.52f));
-        objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 2.54f));*/
+        //objects.add(new SphericalMarble(new Vector3(15, 0, 6), 1f, 1.05f));
+        //objects.add(new SphericalMarble(new Vector3(15, 0, 3), 1f, 1.10f));
+        //objects.add(new SphericalMarble(new Vector3(15, 0, 0), 1f, 1.33f));
+        //objects.add(new SphericalMarble(new Vector3(15, 0, -3), 1f, 1.52f));
+        //objects.add(new SphericalMarble(new Vector3(15, 0, -6), 1f, 2.54f));
 
-        //objects.add(new PlanarObject(new Vector3(0, -0.6f, -10), 0.00846668f, 0, loadImage("/images/testing-page.jpg")));
-        objects.add(new SphericalMarble(new Vector3(0, 0, -3f), 2f, 1.5163f));
+        objects.add(new PlanarObject(new Vector3(0, -0.6f, -10), 0.00846668f, 0, loadImage("/images/testing-page.jpg")));
+        objects.add(new SphericalMarble(new Vector3(0, 0, -7.45f), 2.5f, 1.5163f));
 
         /*objects.add(new SphericalMarble(new Vector3(0, 0, 0), 1f, 1.52f, 0xFF00FF, 0.9f));
         objects.add(new SphericalMarble(new Vector3(0, 0, -3), 1f, 1.52f, 0x00FFFF, 0.9f));
