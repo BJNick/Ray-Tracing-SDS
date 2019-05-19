@@ -4,26 +4,39 @@ package org.mykyta;
  *   This class sends a ray for each requested pixel and returns the resultant color. It is essential for the raytracing process.
  */
 
-public class RaycastRenderer {
+class RaycastRenderer {
 
     private Iterable<VisibleObject> visibleObjects;
     private Iterable<LightSource> lightSources;
     private float fieldOfView;
-    public Vector3 cameraPos;
-    public float cameraAngle = 0;
+    Vector3 cameraPos;
+    float cameraAngle = 0;
 
     private final float rasterPlaneDist = 1f;
-    private final int MaxReflectionDepth = 10;
-    private final float pastObjectStep = 10;
+    private final int MaxReflectionDepth = 5;
+    private final float pastObjectStep = 0.001f;
 
-    public RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
+    RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
         this.visibleObjects = visibleObjects;
         this.lightSources = lightSources;
         this.fieldOfView = fieldOfView;
         cameraPos = new Vector3(0, 0, 10);
     }
 
-    public int getPixel(int u, int v, int width, int height) {
+    void setFieldOfView(float fieldOfView) {
+        this.fieldOfView = fieldOfView;
+    }
+
+    float getFieldOfView() {
+        return fieldOfView;
+    }
+
+    void setVisibleObjects(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources) {
+        this.visibleObjects = visibleObjects;
+        this.lightSources = lightSources;
+    }
+
+    int getPixel(int u, int v, int width, int height) {
         Vector3 relRay = createRay(u, v, width, height);
         Illumination illum = traceRayIllumination(cameraPos, relRay, 0);
         if (illum != null)
@@ -31,9 +44,9 @@ public class RaycastRenderer {
         return 0x000000;
     }
 
-    public String getPixelDescription(int u, int v, int width, int height) {
+    String getPixelDescription(int u, int v, int width, int height) {
         Vector3 relRay = createRay(u, v, width, height);
-        RaycastHit hit = traceRayHit(cameraPos, relRay);
+        RaycastHit hit = traceClosestRayHit(cameraPos, relRay);
         if (hit != null)
             return hit.objectID + " " + hit.position + ", " + hit.depth + " deep";
         return "(no hit)";
@@ -54,7 +67,7 @@ public class RaycastRenderer {
         }
     }
 
-    private RaycastHit traceRayHit(Vector3 origin, Vector3 relRay) {
+    private RaycastHit traceClosestRayHit(Vector3 origin, Vector3 relRay) {
         RaycastHit closestHit = null;
 
         for (VisibleObject vo : visibleObjects) {
@@ -64,11 +77,6 @@ public class RaycastRenderer {
                         closestHit = latestHit;
                     }
             }
-        }
-
-        if (closestHit.material.reflective || closestHit.material.transparent) {
-            // return traceRayHit();
-            // TODO Reflection & Refraction
         }
 
         return closestHit;
@@ -122,20 +130,21 @@ public class RaycastRenderer {
             Vector3 rotAxis = closestHit.normal.cross(incident).normalized();
 
             Vector3 reflectedDir = closestHit.normal.rotate(-reflectedAngle, rotAxis);
-            Vector3 refractedDir = closestHit.normal.scale(-1).rotate(refractedAngle, rotAxis);
 
             float partialReflection = Illumination.getPartialReflection(reflectedAngle, refractedAngle);
             // System.out.println(reflectedAngle + " " + refractedAngle + " " + partialReflection);
 
             base = base.combine(
-                    traceRayIllumination(closestHit.position.add(reflectedDir.scale(0.01f)), reflectedDir, recursionDepth + 1)
+                    traceRayIllumination(closestHit.position.add(reflectedDir.scale(pastObjectStep)), reflectedDir, recursionDepth + 1)
                             .dim(closestHit.material.transparency).dim(partialReflection)
             );
-            if (partialReflection < 0.95)
+            if (partialReflection < 0.95f) {
+                Vector3 refractedDir = closestHit.normal.scale(-1).rotate(refractedAngle, rotAxis);
                 base = base.combine(
-                    traceRayIllumination(closestHit.position.add(refractedDir.scale(0.01f)), refractedDir, recursionDepth + 1)
-                            .dim(closestHit.material.transparency).dim(1f - partialReflection).applyAlbedo(closestHit.material.albedo, 1f)
+                        traceRayIllumination(closestHit.position.add(refractedDir.scale(pastObjectStep)), refractedDir, recursionDepth + 1)
+                                .dim(1f - partialReflection).applyAlbedo(closestHit.material.albedo, closestHit.material.transparency)
                 );
+            }
             if (closestHit.material.transparency < 1f) {
                 base = base.combine(getIlluminationAt(closestHit).applyAlbedo(closestHit.material.albedo, 1f - closestHit.material.transparency));
             }
