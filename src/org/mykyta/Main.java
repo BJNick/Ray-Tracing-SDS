@@ -7,6 +7,9 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Main {
@@ -15,6 +18,7 @@ public class Main {
     static int frameCount = 0;
     static Iterable<VisibleObject> currentScene;
     static long lastKeyPress = -1000;
+    static boolean helpVisible = false;
 
     public static void main(String[] args) {
 
@@ -27,6 +31,11 @@ public class Main {
         frame.setLayout(null);
         frame.setFocusTraversalKeysEnabled(false);
         render.setFocusTraversalKeysEnabled(false);
+
+        JLabel instructions = new JLabel(loadText("/explanation.html"));
+        frame.add(instructions);
+        instructions.setLocation(820, 5);
+        instructions.setSize(200, 700);
 
         ArrayList<LightSource> sources = new ArrayList<>();
 
@@ -104,6 +113,9 @@ public class Main {
                         saveToFile(render);
                 } else if (e.getKeyCode() == KeyEvent.VK_F2) {
                     saveToFile(render);
+                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+                    helpVisible = !helpVisible;
+                    frame.setSize(800 + (helpVisible ? 240 : 0), frame.getHeight());
                 } else {
                     if (System.nanoTime() - lastKeyPress < 50000000)
                         render.drawViewAA(raycast, 20, false);
@@ -131,6 +143,7 @@ public class Main {
     }
 
     private static void saveToFile(RenderPanel panel) {
+        // TODO create folder
         try {
             File outputFile = new File("generated/saved" + (frameCount / 100) + "" + (frameCount / 10 % 10) + "" + (frameCount % 10) + ".png");
             ImageIO.write(panel.bufferedImage, "png", outputFile);
@@ -152,6 +165,19 @@ public class Main {
         }
 
         return image;
+    }
+
+    private static String loadText(String filename) {
+
+        String text = "";
+
+        try {
+            text = new String(Files.readAllBytes(Paths.get(Main.class.getResource(filename).toURI())));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return text;
     }
 
 }
