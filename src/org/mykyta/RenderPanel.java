@@ -13,16 +13,15 @@ import java.awt.image.BufferedImage;
 
 class RenderPanel extends JPanel implements MouseListener {
 
-    public BufferedImage bufferedImage;
-    public final int W, H;
+    BufferedImage bufferedImage;
+    private final int W, H;
     private AffineTransform transform;
-    private RaycastRenderer usedRenderer;
 
-    private boolean printRenderDuration = true;
+    private static final boolean printRenderDuration = false;
 
-    private int aa2 = 1;
+    private int aa2; // Anti-aliasing parameter
 
-    public RenderPanel(int width, int height, int scale, boolean antialiasing) {
+    RenderPanel(int width, int height, int scale, boolean antialiasing) {
         super();
         // The size of everything is cut in half in order to enable anti-aliasing
         aa2 = antialiasing ? 2 : 1;
@@ -31,16 +30,16 @@ class RenderPanel extends JPanel implements MouseListener {
         H = height * aa2 / scale;
         this.setSize(W * scale / aa2, H * scale / aa2);
         this.setPreferredSize(this.getSize());
+        this.setMinimumSize(this.getSize());
         transform =  AffineTransform.getScaleInstance(scale / (float) aa2, scale / (float) aa2);
         this.addMouseListener(this);
     }
 
-    public void drawViewAA(RaycastRenderer renderer, int sc, boolean enhance) {
+    void drawViewAA(RaycastRenderer renderer, int sc, boolean enhance) {
         drawView(renderer, sc * aa2, enhance);
     }
 
-    public void drawView(RaycastRenderer renderer, int sc, boolean enhance) {
-        this.usedRenderer = renderer;
+    void drawView(RaycastRenderer renderer, int sc, boolean enhance) {
         Graphics2D bImgGraphics = bufferedImage.createGraphics();
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < W/sc; i++) {
@@ -53,9 +52,10 @@ class RenderPanel extends JPanel implements MouseListener {
                 paintImmediately(0, 0, W, H);
         }
         repaint(0);
-        long endTime = System.currentTimeMillis();
-        if (printRenderDuration)
+        if (printRenderDuration) {
+            long endTime = System.currentTimeMillis();
             System.out.println("Rendered in " + (endTime - startTime) + "ms");
+        }
     }
 
     @Override
@@ -70,8 +70,8 @@ class RenderPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
-        System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight(), W, H));
+        // System.out.println(e.getX() * W / getWidth() + " " + e.getY() * H / getHeight());
+        // System.out.println(usedRenderer.getPixelDescription(e.getX() * W / getWidth(), e.getY() * H / getHeight(), W, H));
     }
 
     @Override

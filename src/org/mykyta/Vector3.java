@@ -1,17 +1,19 @@
+
 package org.mykyta;
 
 /*
- * This class is a representation of a 3D vector [x, y, z], it is required to store information about position of objects and direction of rays.
+ * This class is a representation of a 3D vector [x, y, z], it is required to
+ *  store information about position of objects and direction of rays.
  */
 
 public class Vector3 {
 
-    public static Vector3 ZERO = new Vector3(0, 0, 0);
-    public static Vector3 UP = new Vector3(0, 1, 0);
-    public static Vector3 RIGHT = new Vector3(1, 0, 0);
-    public static Vector3 FRONT = new Vector3(0, 0, -1);
+    static final Vector3 ZERO = new Vector3(0, 0, 0);
+    static final Vector3 UP = new Vector3(0, 1, 0);
+    static final Vector3 RIGHT = new Vector3(1, 0, 0);
+    static final Vector3 FRONT = new Vector3(0, 0, -1);
 
-    public final float x, y, z;
+    final float x, y, z;
     private float mag = -1;
     private Vector3 normalized;
 
@@ -23,52 +25,52 @@ public class Vector3 {
     }
 
     // Multiply by a constant
-    public Vector3 scale(float c) {
+    Vector3 scale(float c) {
         return new Vector3(x * c, y * c, z * c);
     }
 
     // Add to another vector
-    public Vector3 add(Vector3 v) {
+    Vector3 add(Vector3 v) {
         return new Vector3(x + v.x, y + v.y, z + v.z);
     }
 
     // Find the magnitude (using Pythagorean Theorem)
-    public float mag() {
+    float mag() {
         if (mag == -1)
             mag = (float) Math.sqrt(sqrMag());
         return mag;
     }
 
     // Find the scale factor for this vector based on it's normal vector
-    public float signedScale(Vector3 to) {
+    float signedScale(Vector3 to) {
         assert sqrMag() != 0;
         return to.x != 0 ? (x / to.x) : to.y != 0 ? (y / to.y) : (z / to.z);
     }
 
     // Get a normalized vector (with a magnitude of 1)
-    public Vector3 normalized() {
+    Vector3 normalized() {
         if (normalized == null)
             normalized = scale(1f / mag());
         return normalized;
     }
 
     // Find the squared magnitude (faster, as square roots are longer to compute)
-    public float sqrMag() {
+    float sqrMag() {
         return x * x + y * y + z * z;
     }
 
     // Subtract another vector
-    public Vector3 sub(Vector3 v) {
+    Vector3 sub(Vector3 v) {
         return add(v.scale(-1));
     }
 
     // Dot multiply
-    public float dot(Vector3 v) {
+    float dot(Vector3 v) {
         return x * v.x + y * v.y + z * v.z;
     }
 
     // Cross multiply
-    public Vector3 cross(Vector3 v) {
+    Vector3 cross(Vector3 v) {
         return new Vector3(
                 y * v.z - z * v.y,
                 z * v.x - x * v.z,
@@ -77,20 +79,20 @@ public class Vector3 {
     }
 
     // Rotate by an angle around y axis
-    public Vector3 rotatedY(float angle) {
+    Vector3 rotatedY(float angle) {
         float newX = (float) (x * Math.cos(angle) - z * Math.sin(angle));
         float newZ = (float) (x * Math.sin(angle) + z * Math.cos(angle));
         return new Vector3(newX, y, newZ);
     }
 
     // Find angle between this and another vector
-    public float angle(Vector3 v) {
+    float angle(Vector3 v) {
         return (float) Math.acos(this.dot(v) / (mag() * v.mag()));
     }
 
 
     // Apply Rodrigues rotation matrix (important for reflection and refraction)
-    public Vector3 rotate(float a, Vector3 w0) {
+    Vector3 rotate(float a, Vector3 w0) {
         Matrix3x3 w = new Matrix3x3(
                 0, -w0.z, w0.y,
                 w0.z, 0, -w0.x,
@@ -121,22 +123,22 @@ public class Vector3 {
 
         private final static Matrix3x3 I = new Matrix3x3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
-        public Matrix3x3(float... m) {
+        Matrix3x3(float... m) {
             matrix = new float[3][3];
             for (int i = 0; i < m.length; i++) {
                 matrix[i/3][i%3] = m[i];
             }
         }
 
-        public Matrix3x3(float[][] m) {
+        Matrix3x3(float[][] m) {
             matrix = m;
         }
 
-        public float get(int row, int column) {
+        float get(int row, int column) {
             return matrix[row][column];
         }
 
-        public Matrix3x3 multiply(Matrix3x3 other) {
+        Matrix3x3 multiply(Matrix3x3 other) {
             float[][] ret = new float[3][3];
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -147,7 +149,7 @@ public class Vector3 {
             return new Matrix3x3(ret);
         }
 
-        public Vector3 multiply(Vector3 v) {
+        Vector3 multiply(Vector3 v) {
             return new Vector3(
                     get(0, 0) * v.x + get(0, 1) * v.y + get(0, 2) * v.z,
                     get(1, 0) * v.x + get(1, 1) * v.y + get(1, 2) * v.z,
@@ -155,7 +157,7 @@ public class Vector3 {
             );
         }
 
-        public Matrix3x3 times(float value) {
+        Matrix3x3 times(float value) {
             float[][] ret = new float[3][3];
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -165,7 +167,7 @@ public class Vector3 {
             return new Matrix3x3(ret);
         }
 
-        public Matrix3x3 add(Matrix3x3 other) {
+        Matrix3x3 add(Matrix3x3 other) {
             float[][] ret = new float[3][3];
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {

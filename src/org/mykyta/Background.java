@@ -5,13 +5,12 @@ import java.awt.image.BufferedImage;
 
 public class Background implements VisibleObject {
 
-    private float R = 500;
     private Vector3 pos = Vector3.ZERO;
     private float heightSize = 650;
 
     private BufferedImage texture;
 
-    public Background(BufferedImage texture) {
+    Background(BufferedImage texture) {
         this.texture = texture;
     }
 
@@ -20,7 +19,8 @@ public class Background implements VisibleObject {
         Vector3 flatOrigin = new Vector3(origin.x,0, origin.z);
         Vector3 flatD = new Vector3(relRay.x,0, relRay.z);
 
-        Vector3[] collisions = CollisionEquations.checkRaySphereCollision(flatOrigin, flatD, pos, R);
+        float r = 500;
+        Vector3[] collisions = CollisionEquations.checkRaySphereCollision(flatOrigin, flatD, pos, r);
 
         if (collisions.length == 0)
             return null;

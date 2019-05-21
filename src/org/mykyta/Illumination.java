@@ -8,18 +8,18 @@ public class Illumination {
     private final float G;
     private final float B;
 
-    public final static Illumination NO_LIGHT = new Illumination(0, 0, 0);
-    public final static Illumination WHITE = new Illumination(1, 1, 1);
-    public final static Illumination AMBIENT = new Illumination(0.5f, 0.5f, 0.5f);
-    public final static Illumination ERROR = new Illumination(1f, 0f, 1f);
+    final static Illumination NO_LIGHT = new Illumination(0, 0, 0);
+    final static Illumination WHITE = new Illumination(1, 1, 1);
+    final static Illumination AMBIENT = new Illumination(0.5f, 0.5f, 0.5f);
+    final static Illumination ERROR = new Illumination(1f, 0f, 1f);
 
-    public Illumination(float R, float G, float B){
+    private Illumination(float R, float G, float B) {
         this.R = R;
         this.G = G;
         this.B = B;
     }
 
-    public Illumination(int rgb, float intencity){
+    Illumination(int rgb, float intencity) {
         Color color = new Color(rgb);
         this.R = color.getRed() / 255f * intencity;
         this.G = color.getGreen() / 255f * intencity;
@@ -27,32 +27,32 @@ public class Illumination {
     }
 
     // Return a screen-pixel color
-    public int toScreenColor() {
+    int toScreenColor() {
         return new Color(tr(R), tr(G), tr(B)).getRGB();
     }
 
     // Dim the light by a factor
-    public Illumination dim(float v) {
+    Illumination dim(float v) {
         return new Illumination(R*v, G*v, B*v);
     }
 
     // Combine two illuminations
-    public Illumination combine(Illumination i) {
+    Illumination combine(Illumination i) {
         return new Illumination(i.R + R, i.G + G, i.B + B);
     }
 
     // Apply albedo of a surface
-    public Illumination applyAlbedo(Color c, float p) {
+    Illumination applyAlbedo(Color c, float p) {
         return new Illumination(R * fl(c.getRed()) * p, G * fl(c.getGreen()) * p, B * fl(c.getBlue()) * p);
     }
 
     // Apply the angle of a surface using cos
-    public Illumination applyAngle(float angle) {
+    Illumination applyAngle(float angle) {
         float ratio = (float) Math.cos(angle);
         return dim(ratio);
     }
 
-    public static float getPartialReflection(float i, float r) {
+    static float getPartialReflection(float i, float r) {
 
         float pp2 = (float) Math.sin(i - r);
         float pp1 = (float) Math.sin(i + r);

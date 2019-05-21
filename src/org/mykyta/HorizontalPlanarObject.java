@@ -4,11 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class HorizontalPlanarObject extends PlanarObject {
 
-    public HorizontalPlanarObject(Vector3 position, float width, float height, float margin) {
-        super(position, width, height, margin);
-    }
-
-    public HorizontalPlanarObject(Vector3 position, float scale, int margin, BufferedImage image) {
+    HorizontalPlanarObject(Vector3 position, float scale, int margin, BufferedImage image) {
         super(position, scale, margin, image);
     }
 

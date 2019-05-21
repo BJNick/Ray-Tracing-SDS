@@ -23,7 +23,7 @@ class RaycastHit {
         this.inside = inside;
     }
 
-    public RaycastHit changeMaterial(ObjectMaterial newmat) {
+    RaycastHit changeMaterial(ObjectMaterial newmat) {
         return new RaycastHit(depth, position, objectID, object, normal, newmat, inside);
     }
 

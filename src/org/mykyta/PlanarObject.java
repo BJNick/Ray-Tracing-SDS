@@ -5,11 +5,12 @@ import java.awt.image.BufferedImage;
 // A plane perpendicular to the z-direction (Vector3.FRONT)
 public class PlanarObject implements VisibleObject {
 
-    protected Vector3 position;
-    protected float width, height, margin, scale;
-    protected BufferedImage texture;
+    Vector3 position;
+    float width, height, margin;
+    private float scale;
+    private BufferedImage texture;
 
-    public PlanarObject(Vector3 position, float width, float height, float margin) {
+    private PlanarObject(Vector3 position, float width, float height, float margin) {
         this.position = position;
         this.width = width;
         this.height = height;
@@ -17,13 +18,13 @@ public class PlanarObject implements VisibleObject {
         texture = null;
     }
 
-    public PlanarObject(Vector3 position, float scale, int margin, BufferedImage image) {
+    PlanarObject(Vector3 position, float scale, int margin, BufferedImage image) {
         this(position, image.getWidth() * scale, image.getHeight() * scale, margin * scale);
         this.scale = scale;
         texture = image;
     }
 
-    protected ObjectMaterial getPixel(float posX, float posY) {
+    ObjectMaterial getPixel(float posX, float posY) {
         if (Math.abs(posX) > width / 2 || Math.abs(posY) > height / 2)
             return ObjectMaterial.createOpaque(0xFFFFFF, 0.7f);
 

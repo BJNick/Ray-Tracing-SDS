@@ -4,12 +4,12 @@ import java.awt.*;
 
 public class SphericalMarble extends SphericalObject {
 
-    public SphericalMarble(Vector3 position, float radius, float refractionIndex) {
+    SphericalMarble(Vector3 position, float radius, float refractionIndex) {
         super(position, radius);
         this.material = ObjectMaterial.createTransparent(refractionIndex, 1f);
         name = SphericalMarble.class.getSimpleName();
         this.material.castsShadow = true;
-        this.material.shadowIntencity = 0.1f;
+        this.material.shadowIntensity = 0.1f;
     }
 
     public SphericalMarble(Vector3 position, float radius, float refractionIndex, int color, float transparency) {

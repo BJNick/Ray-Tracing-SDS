@@ -12,9 +12,9 @@ class RaycastRenderer {
     Vector3 cameraPos;
     float cameraAngle = 0;
 
-    private final float rasterPlaneDist = 1f;
-    private final int MaxReflectionDepth = 5;
-    private final float pastObjectStep = 0.001f;
+    private static final float rasterPlaneDist = 1f;
+    private static final int MaxReflectionDepth = 5;
+    private static final float pastObjectStep = 0.001f;
 
     RaycastRenderer(Iterable<VisibleObject> visibleObjects, Iterable<LightSource> lightSources, float fieldOfView) {
         this.visibleObjects = visibleObjects;
@@ -182,7 +182,7 @@ class RaycastRenderer {
                 for (RaycastHit latestHit : vo.checkRayCollision(origin, dir)) {
                     if (latestHit != null && (exception == null || latestHit.object != exception) && latestHit.depth > 0 && latestHit.depth + 0.001f < endpoint.sub(origin).mag()) {
                         if (latestHit.material.castsShadow)
-                            base *= 1f - latestHit.material.shadowIntencity;
+                            base *= 1f - latestHit.material.shadowIntensity;
                     }
             }
         }

@@ -23,11 +23,11 @@ public class ObjectMaterial {
     Illumination illumination;
 
     boolean castsShadow = true;
-    float shadowIntencity = 1f;
+    float shadowIntensity = 1f;
 
     private ObjectMaterial() {}
 
-    public static ObjectMaterial createOpaque(int albedo, float diffusionRate) {
+    static ObjectMaterial createOpaque(int albedo, float diffusionRate) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.opaque = true;
         ret.albedo = new Color(albedo);
@@ -36,14 +36,14 @@ public class ObjectMaterial {
         return ret;
     }
 
-    public static ObjectMaterial createMirror(float reflectiveness) {
+    static ObjectMaterial createMirror(float reflectiveness) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.reflective = true;
         ret.reflectiveness = reflectiveness;
         return ret;
     }
 
-    public static ObjectMaterial createTransparent(float refractionIndex, float transparency) {
+    static ObjectMaterial createTransparent(float refractionIndex, float transparency) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.reflective = true;
         ret.reflectiveness = 1f;  // TODO partial reflectiveness based on angle
@@ -55,7 +55,7 @@ public class ObjectMaterial {
         return ret;
     }
 
-    public static ObjectMaterial createGlowing(Illumination illumination, boolean castsShadow) {
+    static ObjectMaterial createGlowing(Illumination illumination, boolean castsShadow) {
         ObjectMaterial ret = new ObjectMaterial();
         ret.glows = true;
         ret.illumination = illumination;
@@ -67,7 +67,7 @@ public class ObjectMaterial {
         return createGlowing(new Illumination(rgb, intensity), castsShadow);
     }
 
-    public ObjectMaterial merge(ObjectMaterial mat) {
+    ObjectMaterial merge(ObjectMaterial mat) {
         opaque = opaque || mat.opaque;
         diffusionRate = Math.min(diffusionRate, mat.diffusionRate);
         if (albedo == null) albedo = mat.albedo;

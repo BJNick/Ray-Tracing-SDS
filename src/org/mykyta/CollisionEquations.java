@@ -1,9 +1,9 @@
 package org.mykyta;
 
-public class CollisionEquations {
+class CollisionEquations {
 
     // Check for a collision of a given ray with a sphere
-    public static Vector3[] checkRaySphereCollision(Vector3 p, Vector3 v, Vector3 q, float R) {
+    static Vector3[] checkRaySphereCollision(Vector3 p, Vector3 v, Vector3 q, float R) {
         assert v.sqrMag() == 1;
         Vector3 puv = v.scale( v.dot( q.sub(p) ) / v.mag() );
         Vector3 qi = p.add( puv );

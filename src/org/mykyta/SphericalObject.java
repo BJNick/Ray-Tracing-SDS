@@ -5,27 +5,27 @@ package org.mykyta;
 public class SphericalObject implements VisibleObject {
 
     // A sphere is defined by its origin (position) and radius
-    Vector3 position;
-    float radius;
+    private Vector3 position;
+    private float radius;
 
     ObjectMaterial material;
     String name;
 
-    public SphericalObject(Vector3 position, float radius) {
+    SphericalObject(Vector3 position, float radius) {
         this.position = position;
         this.radius = radius;
         this.material = ObjectMaterial.createOpaque(0x00FF00, 1f);
         name = SphericalObject.class.getSimpleName();
     }
 
-    public SphericalObject(Vector3 position, float radius, int color, float reflective) {
+    SphericalObject(Vector3 position, float radius, int color, float reflective) {
         this(position, radius);
         this.material = ObjectMaterial.createMirror(reflective).merge(ObjectMaterial.createOpaque(color, 1f - reflective));
     }
 
     @Override
     public RaycastHit[] checkRayCollision(Vector3 origin, Vector3 relRay) {
-        Vector3 hit[] = CollisionEquations
+        Vector3[] hit = CollisionEquations
                 .checkRaySphereCollision(origin, relRay, position, radius);
         if (hit.length == 2)
             return new RaycastHit[]{
