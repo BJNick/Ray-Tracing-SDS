@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -179,8 +179,12 @@ public class Main {
         String text = "";
 
         try {
-            text = new Scanner(new File(Main.class.getResource(filename).toURI())).useDelimiter("\\Z").next();
-        } catch (IOException | URISyntaxException e) {
+            InputStream stream = Main.class.getResourceAsStream(filename);
+            if (stream != null)
+                text = new Scanner(stream).useDelimiter("\\Z").next();
+            else
+                throw new IOException("Resource file " + filename + " not found");
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
