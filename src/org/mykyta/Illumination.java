@@ -54,6 +54,9 @@ public class Illumination {
 
     static float getPartialReflection(float i, float r) {
 
+        if (r >= Math.PI / 2)
+            return 1f;
+
         float pp2 = (float) Math.sin(i - r);
         float pp1 = (float) Math.sin(i + r);
         float perpendicular = (pp2 * pp2) / (pp1 * pp1);

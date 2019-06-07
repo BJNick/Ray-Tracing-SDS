@@ -131,18 +131,19 @@ class RaycastRenderer {
 
             Vector3 reflectedDir = closestHit.normal.rotate(-reflectedAngle, rotAxis);
 
-            float partialReflection = Illumination.getPartialReflection(reflectedAngle, refractedAngle);
+            float partialReflectionIn = Illumination.getPartialReflection(reflectedAngle, refractedAngle);
+            float partialReflectionOut = Illumination.getPartialReflection(refractedAngle, reflectedAngle);
             // System.out.println(reflectedAngle + " " + refractedAngle + " " + partialReflection);
 
             base = base.combine(
                     traceRayIllumination(closestHit.position.add(reflectedDir.scale(pastObjectStep)), reflectedDir, recursionDepth + 1)
-                            .dim(closestHit.material.transparency).dim(partialReflection)
+                            .dim(closestHit.material.transparency).dim(partialReflectionIn)
             );
-            if (partialReflection < 0.95f) {
+            if (partialReflectionOut < 0.95f) {
                 Vector3 refractedDir = closestHit.normal.scale(-1).rotate(refractedAngle, rotAxis);
                 base = base.combine(
                         traceRayIllumination(closestHit.position.add(refractedDir.scale(pastObjectStep)), refractedDir, recursionDepth + 1)
-                                .dim(1f - partialReflection).applyAlbedo(closestHit.material.albedo, closestHit.material.transparency)
+                                .dim(1f - partialReflectionOut).applyAlbedo(closestHit.material.albedo, closestHit.material.transparency)
                 );
             }
             if (closestHit.material.transparency < 1f) {
